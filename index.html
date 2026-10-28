@@ -1,0 +1,1045 @@
+<!doctype html><html><head><meta charset=utf8><meta name=viewport content="width=device-width,initial-scale=1,viewport-fit=cover"><style>:root{color-scheme:light;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}html{scroll-padding-top:env(safe-area-inset-top,0px)}body{margin:0;padding:0;font:14px -apple-system,BlinkMacSystemFont,sans-serif;background:#fff;color:#000}img{max-width:100%}[hidden]:not([hidden=until-found i]){display:none!important}</style></head><body>
+<title>رادار أسعار الآيفون</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+Arabic:wght@400;500;600&display=swap">
+<style>
+/* Layout: RTL dashboard. Sticky filters, then hero KPIs, then range-by-generation and distribution,
+   then heatmap and price drivers, then data-quality breakdown, then the listings table.
+   Every chart is mirrored: baseline on the right, larger values extend leftwards. */
+:root {
+  --font: "IBM Plex Sans Arabic", "Segoe UI", Tahoma, system-ui, sans-serif;
+  --page: #f2f4f6;
+  --surface: #fdfdfe;
+  --ink: #0e1a24;
+  --ink2: #4a5762;
+  --muted: #667480;
+  --grid: #e4e8ec;
+  --axis: #c6cdd4;
+  --ring: rgba(14, 26, 36, 0.10);
+  --wash: rgba(14, 26, 36, 0.05);
+  --s1: #2a78d6;
+  --s2: #eb6834;
+  --s3: #98a2ac;
+  --s-ink: #ffffff;
+  --s3-ink: #0e1a24;
+  --pos: #2a78d6;
+  --neg: #e34948;
+  --pos-ink: #1c5cab;
+  --neg-ink: #b02f2e;
+  --seq-lo: #cde2fb;
+  --seq-hi: #104281;
+  --seq-ink-lo: #0b0b0b;
+  --seq-ink-hi: #ffffff;
+  --shadow: 0 8px 24px rgba(14, 26, 36, 0.14);
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --page: #0e1318;
+    --surface: #161c22;
+    --ink: #eef1f4;
+    --ink2: #b9c2cb;
+    --muted: #8b96a1;
+    --grid: #242c34;
+    --axis: #35404a;
+    --ring: rgba(255, 255, 255, 0.10);
+    --wash: rgba(255, 255, 255, 0.06);
+    --s1: #3987e5;
+    --s2: #d95926;
+    --s3: #6c7782;
+    --s3-ink: #ffffff;
+    --pos: #3987e5;
+    --neg: #e66767;
+    --pos-ink: #86b6ef;
+    --neg-ink: #f09a9a;
+    --seq-lo: #184f95;
+    --seq-hi: #86b6ef;
+    --seq-ink-lo: #ffffff;
+    --seq-ink-hi: #0b0b0b;
+    --shadow: 0 8px 24px rgba(0, 0, 0, 0.5);
+    color-scheme: dark;
+  }
+}
+:root[data-theme="dark"] {
+  --page: #0e1318;
+  --surface: #161c22;
+  --ink: #eef1f4;
+  --ink2: #b9c2cb;
+  --muted: #8b96a1;
+  --grid: #242c34;
+  --axis: #35404a;
+  --ring: rgba(255, 255, 255, 0.10);
+  --wash: rgba(255, 255, 255, 0.06);
+  --s1: #3987e5;
+  --s2: #d95926;
+  --s3: #6c7782;
+  --s3-ink: #ffffff;
+  --pos: #3987e5;
+  --neg: #e66767;
+  --pos-ink: #86b6ef;
+  --neg-ink: #f09a9a;
+  --seq-lo: #184f95;
+  --seq-hi: #86b6ef;
+  --seq-ink-lo: #ffffff;
+  --seq-ink-hi: #0b0b0b;
+  --shadow: 0 8px 24px rgba(0, 0, 0, 0.5);
+  color-scheme: dark;
+}
+
+* { box-sizing: border-box; }
+body {
+  background: var(--page);
+  color: var(--ink);
+  font-family: var(--font);
+  font-size: 14px;
+  line-height: 1.55;
+  padding-left: max(16px, env(safe-area-inset-left, 0px));
+  padding-right: max(16px, env(safe-area-inset-right, 0px));
+  padding-block: 8px 48px;
+}
+body::before {
+  content: "";
+  position: fixed;
+  inset: 0 0 auto;
+  height: env(safe-area-inset-top, 0px);
+  background: var(--page);
+  z-index: 10;
+}
+button, input { font: inherit; color: inherit; }
+button { cursor: pointer; }
+:focus-visible { outline: 2px solid var(--s1); outline-offset: 2px; }
+.vh { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; }
+.wrap { max-width: 1280px; margin: 0 auto; min-width: 0; }
+
+/* header */
+.head { display: flex; flex-wrap: wrap; align-items: flex-end; justify-content: space-between; gap: 8px 24px; padding-block: 24px 16px; }
+.head h1 { margin: 0; font-size: 30px; font-weight: 600; letter-spacing: -0.01em; line-height: 1.2; }
+.head p { margin: 6px 0 0; color: var(--ink2); max-width: 60ch; }
+.meta { display: flex; flex-wrap: wrap; gap: 8px; }
+.meta span { border: 1px solid var(--ring); background: var(--surface); border-radius: 999px; padding: 3px 12px; font-size: 12.5px; color: var(--ink2); }
+
+/* filters */
+.filters {
+  display: flex; flex-wrap: wrap; gap: 10px 22px; align-items: center;
+  background: var(--page);
+  padding-block: 12px;
+  border-bottom: 1px solid var(--ring);
+  position: relative; z-index: 5;
+}
+@media (min-width: 900px) {
+  .filters { position: sticky; top: env(safe-area-inset-top, 0px); }
+}
+.fgroup { display: flex; align-items: center; gap: 8px; min-width: 0; flex-wrap: wrap; }
+.flabel { font-size: 12.5px; color: var(--muted); font-weight: 500; }
+.chips { display: flex; flex-wrap: wrap; gap: 6px; }
+.chip {
+  border: 1px solid var(--ring); background: var(--surface); color: var(--ink);
+  border-radius: 999px; padding: 3px 12px; font-size: 13px; line-height: 1.6;
+  display: inline-flex; gap: 6px; align-items: baseline;
+}
+.chip small { color: var(--muted); font-size: 11.5px; font-variant-numeric: tabular-nums; }
+.chip:hover { background: var(--wash); }
+.chip[aria-pressed="true"] { background: var(--s1); border-color: var(--s1); color: #fff; }
+.chip[aria-pressed="true"] small { color: rgba(255,255,255,.82); }
+.fgrow { margin-inline-start: auto; }
+.search {
+  border: 1px solid var(--ring); background: var(--surface); border-radius: 8px;
+  padding: 5px 12px; width: 220px; max-width: 100%; color: var(--ink);
+}
+.search::placeholder { color: var(--muted); }
+.btn {
+  border: 1px solid var(--ring); background: var(--surface); border-radius: 8px;
+  padding: 5px 12px; font-size: 13px; color: var(--ink);
+}
+.btn:hover { background: var(--wash); }
+.btn[disabled] { opacity: .45; cursor: default; }
+.count { font-size: 12.5px; color: var(--ink2); font-variant-numeric: tabular-nums; }
+
+/* layout grids */
+.kpis { display: grid; grid-template-columns: 1.7fr 1fr 1fr 1fr 1.2fr; gap: 12px; margin-top: 16px; }
+.grid2 { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 16px; margin-top: 16px; }
+.full { margin-top: 16px; }
+@media (max-width: 1000px) {
+  .kpis { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .kpis .hero { grid-column: 1 / -1; }
+  .grid2 { grid-template-columns: minmax(0, 1fr); }
+}
+
+.tile { background: var(--surface); border: 1px solid var(--ring); border-radius: 12px; padding: 14px 16px; min-width: 0; display: flex; flex-direction: column; gap: 2px; }
+.tile .lab { font-size: 12.5px; color: var(--ink2); }
+.tile .val { font-size: 28px; font-weight: 600; line-height: 1.25; }
+.tile .val small { font-size: 13px; font-weight: 500; color: var(--muted); margin-inline-start: 6px; }
+.tile.hero .val { font-size: 56px; line-height: 1.1; letter-spacing: -0.02em; }
+.tile .sub { font-size: 12.5px; color: var(--muted); }
+.tile .val.mid { font-size: 21px; padding-top: 5px; }
+.delta { font-weight: 500; }
+.delta.up { color: var(--pos-ink); }
+.delta.down { color: var(--neg-ink); }
+
+.card { background: var(--surface); border: 1px solid var(--ring); border-radius: 12px; padding: 18px; min-width: 0; }
+.card-h { display: flex; justify-content: space-between; align-items: flex-start; gap: 12px; margin-bottom: 12px; }
+.card h2 { margin: 0; font-size: 16px; font-weight: 600; line-height: 1.4; }
+.card .sub { margin: 2px 0 0; font-size: 13px; color: var(--ink2); }
+.note { margin: 10px 0 0; font-size: 12.5px; color: var(--muted); }
+.vt { border: 1px solid var(--ring); background: transparent; border-radius: 8px; padding: 2px 10px; font-size: 12.5px; color: var(--ink2); white-space: nowrap; }
+.vt:hover { background: var(--wash); }
+.chart { min-width: 0; }
+.chart svg { display: block; overflow: visible; direction: ltr; }
+.empty { padding: 36px 8px; text-align: center; color: var(--muted); }
+.dt { overflow-x: auto; }
+.dt table { width: 100%; border-collapse: collapse; font-variant-numeric: tabular-nums; font-size: 13px; }
+.dt th, .dt td { text-align: start; padding: 6px 8px; border-bottom: 1px solid var(--grid); white-space: nowrap; }
+.dt th { color: var(--ink2); font-weight: 500; }
+
+/* svg text */
+.t-axis { fill: var(--muted); font-size: 11.5px; font-family: var(--font); }
+.t-lab { fill: var(--ink); font-size: 13px; font-family: var(--font); }
+.t-val { fill: var(--ink2); font-size: 12px; font-family: var(--font); font-variant-numeric: tabular-nums; }
+.t-n { fill: var(--muted); font-size: 11px; font-family: var(--font); font-variant-numeric: tabular-nums; }
+.rowhit { fill: transparent; cursor: pointer; }
+.rowhit:hover, .rowhit:focus { fill: var(--wash); }
+.dim { opacity: .35; }
+
+/* heatmap */
+.heat { display: grid; grid-template-columns: 78px repeat(4, minmax(0, 1fr)); gap: 2px; }
+.heat .hh { font-size: 12px; color: var(--ink2); text-align: center; padding: 2px 0 6px; font-weight: 500; }
+.heat .hr { font-size: 13px; display: flex; align-items: center; color: var(--ink); padding-inline-end: 6px; }
+.cell {
+  border: 0; border-radius: 6px; min-height: 36px; font-size: 12.5px; font-weight: 500;
+  font-variant-numeric: tabular-nums; display: flex; align-items: center; justify-content: center; padding: 0 2px;
+}
+.cell.none { background: transparent; color: var(--axis); cursor: default; border: 1px dashed var(--grid); }
+.cell.thin { outline: 1px dashed var(--ink2); outline-offset: -3px; }
+.cell:not(.none):hover { box-shadow: inset 0 0 0 2px var(--ink); }
+.cell.on { box-shadow: inset 0 0 0 2px var(--ink); }
+.ramp { display: flex; align-items: center; gap: 8px; margin-top: 12px; font-size: 12px; color: var(--muted); }
+.ramp i { flex: 1; height: 8px; border-radius: 4px; background: linear-gradient(to left, var(--seq-lo), var(--seq-hi)); max-width: 220px; }
+
+/* drivers */
+.dgroup { font-size: 12px; color: var(--muted); font-weight: 500; margin: 12px 0 2px; }
+.dgroup:first-child { margin-top: 0; }
+.drow { display: grid; grid-template-columns: minmax(120px, 38%) minmax(0, 1fr); gap: 10px; align-items: center; min-height: 30px; border-radius: 6px; }
+.drow:hover, .drow:focus { background: var(--wash); outline-offset: 0; }
+.dlab { font-size: 13px; line-height: 1.35; }
+.dlab small { color: var(--muted); font-size: 11.5px; margin-inline-start: 4px; font-variant-numeric: tabular-nums; }
+.track { position: relative; height: 22px; }
+.track::before { content: ""; position: absolute; top: 0; bottom: 0; left: 50%; width: 1px; background: var(--axis); }
+.bar { position: absolute; top: 5px; height: 12px; }
+.bar.pos { right: 50%; background: var(--pos); border-radius: 4px 0 0 4px; }
+.bar.neg { left: 50%; background: var(--neg); border-radius: 0 4px 4px 0; }
+.bv { position: absolute; top: 2px; font-size: 12px; color: var(--ink2); font-variant-numeric: tabular-nums; white-space: nowrap; line-height: 18px; }
+.bv.few { left: 50%; transform: translateX(-50%); color: var(--muted); font-size: 11.5px; top: 2px; }
+.axis-cap { display: flex; justify-content: space-between; font-size: 11.5px; color: var(--muted); margin-top: 10px; padding-inline-start: calc(38% + 10px); }
+
+/* quality */
+.stack { display: block; width: 100%; }
+.legend { display: flex; flex-wrap: wrap; gap: 6px 20px; margin-top: 12px; font-size: 13px; }
+.legend span { display: inline-flex; align-items: center; gap: 8px; color: var(--ink2); }
+.legend i { width: 10px; height: 10px; border-radius: 3px; display: inline-block; }
+.legend b { color: var(--ink); font-weight: 600; font-variant-numeric: tabular-nums; }
+.reasons { margin: 16px 0 0; padding: 0; list-style: none; display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 10px 24px; }
+.reasons li { display: grid; grid-template-columns: auto 1fr; gap: 2px 10px; align-items: baseline; font-size: 13px; }
+.reasons b { font-size: 18px; font-weight: 600; font-variant-numeric: tabular-nums; grid-row: span 2; min-width: 32px; }
+.reasons span { color: var(--ink); font-weight: 500; }
+.reasons em { font-style: normal; color: var(--muted); font-size: 12.5px; }
+
+/* table */
+.tools { display: flex; flex-wrap: wrap; gap: 8px 12px; align-items: center; margin-bottom: 12px; }
+.tools .grow { flex: 1; }
+.chk { display: inline-flex; align-items: center; gap: 6px; font-size: 13px; color: var(--ink2); }
+.twrap { overflow-x: auto; border: 1px solid var(--grid); border-radius: 8px; }
+table.list { width: 100%; min-width: 820px; border-collapse: collapse; font-size: 13px; }
+.list th { text-align: start; font-weight: 500; color: var(--ink2); background: var(--page); padding: 0; border-bottom: 1px solid var(--grid); }
+.list th button { background: none; border: 0; padding: 8px 12px; width: 100%; text-align: start; color: inherit; font-weight: 500; font-size: 12.5px; }
+.list th button:hover { background: var(--wash); }
+.list th[aria-sort="ascending"] button::after { content: " ▲"; font-size: 9px; }
+.list th[aria-sort="descending"] button::after { content: " ▼"; font-size: 9px; }
+.list td { padding: 8px 12px; border-bottom: 1px solid var(--grid); vertical-align: top; font-variant-numeric: tabular-nums; }
+.list tr:last-child td { border-bottom: 0; }
+.list .ttl { max-width: 380px; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; line-height: 1.5; }
+.list td.num { white-space: nowrap; }
+.list td.price { font-weight: 600; }
+.pill { display: inline-block; border-radius: 999px; padding: 1px 9px; font-size: 12px; font-weight: 500; white-space: nowrap; }
+.pill.up { background: color-mix(in srgb, var(--pos) 14%, transparent); color: var(--pos-ink); }
+.pill.down { background: color-mix(in srgb, var(--neg) 14%, transparent); color: var(--neg-ink); }
+.pill.flat { background: var(--wash); color: var(--ink2); }
+.st { display: inline-flex; gap: 7px; align-items: center; white-space: nowrap; }
+.st i { width: 9px; height: 9px; border-radius: 3px; display: inline-block; flex: none; }
+.why { display: block; color: var(--muted); font-size: 11.5px; line-height: 1.4; max-width: 200px; white-space: normal; padding-inline-start: 16px; }
+.pager { display: flex; flex-wrap: wrap; align-items: center; gap: 10px; margin-top: 12px; font-size: 13px; color: var(--ink2); }
+.pager .grow { flex: 1; }
+
+/* tooltip */
+.tip {
+  position: fixed; z-index: 50; pointer-events: none; max-width: 280px;
+  background: var(--surface); border: 1px solid var(--ring); border-radius: 8px; box-shadow: var(--shadow);
+  padding: 8px 12px; font-size: 12.5px;
+}
+.tt-title { color: var(--ink2); margin-bottom: 4px; font-weight: 500; }
+.tt-row { display: flex; gap: 8px; align-items: baseline; }
+.tt-val { font-weight: 600; font-size: 14px; color: var(--ink); font-variant-numeric: tabular-nums; }
+.tt-lab { color: var(--ink2); }
+
+.foot { margin-top: 28px; font-size: 12.5px; color: var(--muted); max-width: 90ch; }
+
+@media (prefers-reduced-motion: no-preference) {
+  .bar, .cell, .chip { transition: background-color .15s, box-shadow .15s; }
+}
+</style>
+
+<div id="app" class="wrap" dir="rtl" lang="ar">
+  <header class="head">
+    <div>
+      <h1>رادار أسعار الآيفون</h1>
+      <p>إعلانات الآيفون المستعمل والجديد على أوبن سوق مصر بعد استبعاد النسخ الكوبي والإكسسوارات والأسعار الغلط.</p>
+    </div>
+    <div class="meta"><span>المصدر: أوبن سوق مصر</span><span>تاريخ الجمع: 27 أكتوبر 2026</span><span id="m-total"></span></div>
+  </header>
+
+  <section class="filters" id="filters" aria-label="الفلاتر">
+    <div class="fgroup"><span class="flabel">الجيل</span><div class="chips" id="f-gen"></div></div>
+    <div class="fgroup"><span class="flabel">الفئة</span><div class="chips" id="f-var"></div></div>
+    <div class="fgroup"><span class="flabel">السعة</span><div class="chips" id="f-sto"></div></div>
+    <div class="fgroup fgrow">
+      <label class="vh" for="q">بحث في الإعلانات</label>
+      <input id="q" class="search" type="search" placeholder="ابحث في عناوين الإعلانات">
+      <button id="reset" class="btn" type="button">إعادة ضبط</button>
+      <span class="count" id="count" aria-live="polite"></span>
+    </div>
+  </section>
+
+  <section class="kpis" id="kpis" aria-label="مؤشرات رئيسية"></section>
+
+  <div class="grid2">
+    <section class="card">
+      <div class="card-h">
+        <div><h2>نطاق الأسعار لكل جيل</h2><p class="sub">اضغط على جيل لتصفية اللوحة كلها</p></div>
+        <button class="vt" type="button" data-for="range">عرض كجدول</button>
+      </div>
+      <div class="chart" id="c-range"></div>
+      <div class="dt" id="t-range" hidden></div>
+      <p class="note">الشريط الملون هو النطاق الشائع (من 25% إلى 75% من الإعلانات)، والنقطة هي الوسيط، والخط الرفيع يمتد من أرخص إعلان لأغلى إعلان.</p>
+    </section>
+    <section class="card">
+      <div class="card-h">
+        <div><h2>توزيع الأسعار</h2><p class="sub">عدد الإعلانات في كل شريحة سعرية (بالجنيه)</p></div>
+        <button class="vt" type="button" data-for="hist">عرض كجدول</button>
+      </div>
+      <div class="chart" id="c-hist"></div>
+      <div class="dt" id="t-hist" hidden></div>
+    </section>
+  </div>
+
+  <div class="grid2">
+    <section class="card">
+      <div class="card-h">
+        <div><h2>خريطة الوسيط: الجيل والفئة</h2><p class="sub">وسيط السعر بالجنيه، واضغط على خانة لتصفية الجيل والفئة معًا</p></div>
+      </div>
+      <div id="c-heat"></div>
+      <p class="note">الخانات ذات الإطار المنقط فيها أقل من 3 إعلانات، فاعتبرها إشارة مش رقم نهائي. آيفون XS Max محسوب في عمود Pro Max.</p>
+    </section>
+    <section class="card">
+      <div class="card-h">
+        <div><h2>إيه اللي بيفرق في السعر؟</h2><p class="sub">وسيط الفرق عن سعر نفس الجيل والفئة</p></div>
+        <button class="vt" type="button" data-for="drv">عرض كجدول</button>
+      </div>
+      <div id="c-drv"></div>
+      <div class="dt" id="t-drv" hidden></div>
+      <p class="note">الأرقام بتوصف الإعلانات اللي ذكرت الخاصية في عنوانها، ومش دليل إن الخاصية هي سبب الفرق. الصفوف اللي فيها أقل من 3 إعلانات متعرضتش.</p>
+    </section>
+  </div>
+
+  <section class="card full">
+    <div class="card-h">
+      <div><h2 id="q-title">من أصل إعلانات الجمع، كام واحد نعتمد عليه؟</h2><p class="sub" id="q-sub"></p></div>
+    </div>
+    <div class="chart" id="c-qual"></div>
+    <div class="legend" id="q-legend"></div>
+    <ul class="reasons" id="q-reasons"></ul>
+  </section>
+
+  <section class="card full">
+    <div class="card-h">
+      <div><h2>كل الإعلانات</h2><p class="sub">الفرق السالب معناه إن الإعلان أرخص من وسيط نفس الجيل والفئة</p></div>
+    </div>
+    <div class="tools">
+      <button class="btn" type="button" id="p-deal">الأرخص نسبيًا</button>
+      <button class="btn" type="button" id="p-low">الأرخص سعرًا</button>
+      <button class="btn" type="button" id="p-high">الأغلى سعرًا</button>
+      <span class="grow"></span>
+      <label class="chk" for="showall"><input type="checkbox" id="showall"> إظهار الإعلانات المستبعدة</label>
+    </div>
+    <div class="twrap">
+      <table class="list">
+        <thead><tr id="thead"></tr></thead>
+        <tbody id="tbody"></tbody>
+      </table>
+    </div>
+    <div class="pager">
+      <span id="pinfo"></span><span class="grow"></span>
+      <button class="btn" type="button" id="pprev">السابق</button>
+      <button class="btn" type="button" id="pnext">التالي</button>
+    </div>
+  </section>
+
+  <p class="foot">الوسيط هو السعر اللي نص الإعلانات تحته ونصها فوقه، وبنستخدمه بدل المتوسط لأن إعلانات قليلة بأسعار عالية بتشد المتوسط. الجيل والفئة والسعة والبطارية والضريبة مستخرجة من نص عنوان الإعلان، فالإعلانات اللي مذكرتش الخاصية دي مش داخلة في التحليل الخاص بيها.</p>
+</div>
+<div id="tip" class="tip" hidden></div>
+
+<script>
+(function () {
+  'use strict';
+  var DATA = [{"i":0,"t":"آيفون 11 برو حاله ممتازه الجهاز بيلمع  معه العلبه","p":11500,"g":"11","v":"pro","s":"valid","sto":null,"bat":null,"tax":null,"box":1,"nw":0,"imp":0,"rel":-0.1154,"gm":13000.0,"why":""},{"i":1,"t":"ايفون 13عادي","p":11500,"g":"13","v":"base","s":"valid","sto":null,"bat":null,"tax":null,"box":0,"nw":0,"imp":0,"rel":-0.5,"gm":23000.0,"why":""},{"i":2,"t":"ايفون 13 pro max  256g بطاريه82  السعر 15000ج   شريحتين فعليين مش مغير اي حاجه نموذج m  معاه البوكس","p":15000,"g":"13","v":"promax","s":"outlier","sto":256,"bat":82,"tax":null,"box":1,"nw":0,"imp":0,"rel":null,"gm":null,"why":"سعر بعيد جدًا عن سعر نفس الموديل"},{"i":3,"t":"iphone 18 pro max","p":140000,"g":"18","v":"promax","s":"clone","sto":null,"bat":null,"tax":null,"box":0,"nw":0,"imp":0,"rel":null,"gm":null,"why":"نسخة كوبي أو إعلان دعائي بسعر وهمي"},{"i":4,"t":"ايفون 17برو ماكس اليابني","p":5000,"g":"17","v":"promax","s":"clone","sto":null,"bat":null,"tax":null,"box":0,"nw":0,"imp":0,"rel":null,"gm":null,"why":"نسخة كوبي أو إعلان دعائي بسعر وهمي"},{"i":5,"t":"ايفون 11 للبيع","p":12000,"g":"11","v":"base","s":"valid","sto":null,"bat":null,"tax":null,"box":0,"nw":0,"imp":0,"rel":0.0909,"gm":11000.0,"why":""},{"i":6,"t":"ايفون 15 برو ماكس بطرية 82٪ مساحة 256","p":50000,"g":"15","v":"promax","s":"valid","sto":256,"bat":82,"tax":null,"box":0,"nw":0,"imp":0,"rel":0.0,"gm":50000.0,"why":""},{"i":7,"t":"للبيع ايفون 14 برو ماكس","p":41000,"g":"14","v":"promax","s":"valid","sto":null,"bat":null,"tax":null,"box":0,"nw":0,"imp":0,"rel":0.0789,"gm":38000.0,"why":""},{"i":8,"t":"apple iphone air","p":70000,"g":null,"v":"air","s":"clone","sto":null,"bat":null,"tax":null,"box":0,"nw":0,"imp":0,"rel":null,"gm":null,"why":"نسخة كوبي أو إعلان دعائي بسعر وهمي"},{"i":9,"t":"New Iphone 17 pro 512G orange","p":83000,"g":"17","v":"pro","s":"clone","sto":512,"bat":null,"tax":null,"box":0,"nw":1,"imp":0,"rel":null,"gm":null,"why":"نسخة كوبي أو إعلان دعائي بسعر وهمي"},{"i":10,"t":"ايفون 16 برو ماكس","p":46000,"g":"16","v":"promax","s":"valid","sto":null,"bat":null,"tax":null,"box":0,"nw":0,"imp":0,"rel":-0.2581,"gm":62000.0,"why":""},{"i":11,"t":"ايفون _iphone 11","p":8000,"g":"11","v":"base","s":"valid","sto":null,"bat":null,"tax":null,"box":0,"nw":0,"imp":0,"rel":-0.2727,"gm":11000.0,"why":""},{"i":12,"t":"ايفون 14 برو للبيع","p":41000,"g":"14","v":"pro","s":"valid","sto":null,"bat":null,"tax":null,"box":0,"nw":0,"imp":0,"rel":0.1233,"gm":36499.5,"why":""},{"i":13,"t":"ايفون 13 مساحه 128 وتر بروف بطاريه 87 معاه كرتونه وشاحن معفي ضريبه  السعر 24500","p":26000,"g":"13","v":"base","s":"valid","sto":128,"bat":87,"tax":"exempt","box":1,"nw":0,"imp":0,"rel":0.1304,"gm":23000.0,"why":""},{"i":14,"t":"ايفون 16 برو ماكس","p":66000,"g":"16","v":"promax","s":"valid","sto":null,"bat":null,"tax":null,"box":0,"nw":0,"imp":0,"rel":0.0645,"gm":62000.0,"why":""},{"i":15,"t":"للبيع100بطارية iPhone 17 Pro Max 256","p":82000,"g":"17","v":"promax","s":"clone","sto":256,"bat":null,"tax":null,"box":0,"nw":0,"imp":0,"rel":null,"gm":null,"why":"نسخة كوبي أو إعلان دعائي بسعر وهمي"},{"i":16,"t":"ايفون 16 عادي اسود مميز كسر كسر الزيرو  متفتحش قبل كدا ومش مغير حاجه الجهاز نظيف نظيف يعني","p":45000,"g":"16","v":"base","s":"valid","sto":null,"bat":null,"tax":null,"box":0,"nw":1,"imp":0,"rel":-0.0625,"gm":48000.0,"why":""},{"i":17,"t":"ايفون 16 بلس بحاله ممتازه ، ذاكره 256!!! و نسبه بطاريه قريبه من الجديد 92%! معفي من الضريبه","p":50499,"g":"16","v":"plus","s":"valid","sto":256,"bat":92,"tax":"exempt","box":0,"nw":1,"imp":0,"rel":0.1285,"gm":44750.0,"why":""},{"i":18,"t":"ايفون 11bro","p":14000,"g":"11","v":"pro","s":"valid","sto":null,"bat":null,"tax":null,"box":0,"nw":0,"imp":0,"rel":0.0769,"gm":13000.0,"why":""},{"i":19,"t":"IPhone 8 Plus -ايفون 8 بلس","p":6000,"g":"8","v":"plus","s":"valid","sto":null,"bat":null,"tax":null,"box":0,"nw":0,"imp":0,"rel":0.0435,"gm":5750.0,"why":""},{"i":20,"t":"ايفون 7 بلس حالة الجديد حرفيا علبة جديده كامل اغراصه 256 جيجت","p":11500,"g":"7","v":"plus","s":"outlier","sto":256,"bat":null,"tax":null,"box":1,"nw":1,"imp":0,"rel":null,"gm":null,"why":"سعر بعيد جدًا عن سعر نفس الموديل"},{"i":21,"t":"ايفون 8 بلس للبدل ب ايفون اعلى مع دفع الفرق 64 gigaمغير بطاريه فقط","p":7500,"g":"8","v":"plus","s":"valid","sto":64,"bat":null,"tax":null,"box":0,"nw":0,"imp":0,"rel":0.3043,"gm":5750.0,"why":""},{"i":22,"t":"ايفون 17 بطاريه 92","p":59,"g":"17","v":"base","s":"clone","sto":null,"bat":92,"tax":null,"box":0,"nw":0,"imp":0,"rel":null,"gm":null,"why":"نسخة كوبي أو إعلان دعائي بسعر وهمي"},{"i":23,"t":"ايباد ايفون برو 11 m4","p":65000,"g":"11","v":"pro","s":"other","sto":null,"bat":null,"tax":null,"box":0,"nw":0,"imp":0,"rel":null,"gm":null,"why":"إكسسوار / منتج مش آيفون"},{"i":24,"t":"ايفون 18 بروماكس","p":6,"g":"18","v":"promax","s":"clone","sto":null,"bat":null,"tax":null,"box":0,"nw":0,"imp":0,"rel":null,"gm":null,"why":"نسخة كوبي أو إعلان دعائي بسعر وهمي"},{"i":25,"t":"ايفون 14 برو ماكس للبيع","p":35000,"g":"14","v":"promax","s":"valid","sto":null,"bat":null,"tax":null,"box":0,"nw":0,"imp":0,"rel":-0.0789,"gm":38000.0,"why":""},{"i":26,"t":"جرابات ايفون 13برو ماكس","p":100,"g":"13","v":"promax","s":"other","sto":null,"bat":null,"tax":null,"box":0,"nw":0,"imp":0,"rel":null,"gm":null,"why":"إكسسوار / منتج مش آيفون"},{"i":27,"t":"ايفون 13 max اقرا الوصف جيد","p":22000,"g":"13","v":"base","s":"valid","sto":null,"bat":null,"tax":null,"box":0,"nw":0,"imp":0,"rel":-0.0435,"gm":23000.0,"why":""},{"i":28,"t":"ايفون بروماكس","p":5000,"g":null,"v":"promax","s":"unknown","sto":null,"bat":null,"tax":null,"box":0,"nw":0,"imp":0,"rel":null,"gm":null,"why":"الموديل مش واضح في العنوان"},{"i":29,"t":"ايفون 13 للبيع بطاريه 76 مساحه 128 معاه الكرتونه مش مغير اي حاجه ولا عمره اتفتح","p":23000,"g":"13","v":"base","s":"valid","sto":128,"bat":76,"tax":null,"box":1,"nw":0,"imp":0,"rel":0.0,"gm":23000.0,"why":""},{"i":30,"t":"آيفون 14 برو جديد غير مستعمل وارد الخليج","p":35000,"g":"14","v":"pro","s":"valid","sto":null,"bat":null,"tax":null,"box":0,"nw":1,"imp":1,"rel":-0.0411,"gm":36499.5,"why":""},{"i":31,"t":"ايفون 14 برو ماكس 128 جيجا","p":35000,"g":"14","v":"promax","s":"valid","sto":128,"bat":null,"tax":null,"box":0,"nw":0,"imp":0,"rel":-0.0789,"gm":38000.0,"why":""},{"i":32,"t":"ايفون 14 برو 128 جيجا","p":30000,"g":"14","v":"pro","s":"valid","sto":128,"bat":null,"tax":null,"box":0,"nw":0,"imp":0,"rel":-0.1781,"gm":36499.5,"why":""},{"i":33,"t":"ايفون 17بروماكس","p":7750,"g":"17","v":"promax","s":"clone","sto":null,"bat":null,"tax":null,"box":0,"nw":0,"imp":0,"rel":null,"gm":null,"why":"نسخة كوبي أو إعلان دعائي بسعر وهمي"},{"i":34,"t":"ايفون اكس اس ماكس خطين معفي ضريبه","p":12000,"g":"xs","v":"promax","s":"valid","sto":null,"bat":null,"tax":"exempt","box":0,"nw":0,"imp":0,"rel":0.2632,"gm":9500.0,"why":""},{"i":35,"t":"ابل. ايفون 14 pro max                              Waw.","p":25000,"g":"14","v":"promax","s":"valid","sto":null,"bat":null,"tax":null,"box":0,"nw":0,"imp":0,"rel":-0.3421,"gm":38000.0,"why":""},{"i":36,"t":"Fekra Premium Whale Case for iPhone 17 with Camera Lens Protector Included, Slim Silicone Cover with","p":320,"g":"17","v":"pro","s":"other","sto":null,"bat":null,"tax":null,"box":0,"nw":0,"imp":0,"rel":null,"gm":null,"why":"إكسسوار / منتج مش آيفون"},{"i":37,"t":"ايفون 16 برو بدون ولا خربوش","p":53000,"g":"16","v":"pro","s":"valid","sto":null,"bat":null,"tax":null,"box":0,"nw":0,"imp":0,"rel":-0.0536,"gm":56000.0,"why":""},{"i":38,"t":"ايفون 16 e","p":30000,"g":"16","v":"e","s":"valid","sto":null,"bat":null,"tax":null,"box":0,"nw":0,"imp":0,"rel":0.0,"gm":30000.0,"why":""},{"i":39,"t":"ايفون.  xr","p":5000,"g":"xr","v":"base","s":"valid","sto":null,"bat":null,"tax":null,"box":0,"nw":0,"imp":0,"rel":-0.3333,"gm":7500.0,"why":""},{"i":40,"t":"IPHONE 17 PRO MAX فبريكا حرفيا بالكرتونة و الوصلة كل حاجة جديدة و ضمان سنتين","p":80000,"g":"17","v":"promax","s":"clone","sto":null,"bat":null,"tax":null,"box":1,"nw":1,"imp":0,"rel":null,"gm":null,"why":"نسخة كوبي أو إعلان دعائي بسعر وهمي"},{"i":41,"t":"ايفون 14 برو ماكس 128 iphon 14 pro max","p":28000,"g":"14","v":"promax","s":"valid","sto":128,"bat":null,"tax":null,"box":0,"nw":0,"imp":0,"rel":-0.2632,"gm":38000.0,"why":""},{"i":42,"t":"ايفون 12 برو ماكس","p":14000,"g":"12","v":"promax","s":"valid","sto":null,"bat":null,"tax":null,"box":0,"nw":0,"imp":0,"rel":-0.2222,"gm":18000.0,"why":""},{"i":43,"t":"أيفون 12برو ماكس","p":26000,"g":"12","v":"promax","s":"valid","sto":null,"bat":null,"tax":null,"box":0,"nw":0,"imp":0,"rel":0.4444,"gm":18000.0,"why":""},{"i":44,"t":"ايفون 17 بروماكس","p":7000,"g":"17","v":"promax","s":"clone","sto":null,"bat":null,"tax":null,"box":0,"nw":0,"imp":0,"rel":null,"gm":null,"why":"نسخة كوبي أو إعلان دعائي بسعر وهمي"},{"i":45,"t":"iphone xsmax ايفون اكس اس ماكس","p":6000,"g":"xs","v":"promax","s":"valid","sto":null,"bat":null,"tax":null,"box":0,"nw":0,"imp":0,"rel":-0.3684,"gm":9500.0,"why":""},{"i":46,"t":"ايفون 18 برو ماكس 256","p":95000,"g":"18","v":"promax","s":"valid","sto":256,"bat":null,"tax":null,"box":0,"nw":0,"imp":0,"rel":0.0,"gm":95000.0,"why":""},{"i":47,"t":"ايفون 14 برو","p":38500,"g":"14","v":"pro","s":"valid","sto":null,"bat":null,"tax":null,"box":0,"nw":0,"imp":0,"rel":0.0548,"gm":36499.5,"why":""},{"i":48,"t":"آيفون 11عادي","p":7500,"g":"11","v":"base","s":"valid","sto":null,"bat":null,"tax":null,"box":0,"nw":0,"imp":0,"rel":-0.3182,"gm":11000.0,"why":""},{"i":49,"t":"موبيل ايفون 13 mini","p":17999,"g":"13","v":"mini","s":"valid","sto":null,"bat":null,"tax":null,"box":0,"nw":0,"imp":0,"rel":0.1613,"gm":15499.5,"why":""},{"i":50,"t":"ايفون بروماكس","p":5000,"g":null,"v":"promax","s":"unknown","sto":null,"bat":null,"tax":null,"box":0,"nw":0,"imp":0,"rel":null,"gm":null,"why":"الموديل مش واضح في العنوان"},{"i":51,"t":"ابل - ايفون 17 برو ماكس 512 برتقالي","p":90000,"g":"17","v":"promax","s":"valid","sto":512,"bat":null,"tax":null,"box":0,"nw":0,"imp":0,"rel":0.2857,"gm":70000.0,"why":""},{"i":52,"t":"ايفون 15 برو ماكس للبيع","p":50000,"g":"15","v":"promax","s":"valid","sto":null,"bat":null,"tax":null,"box":0,"nw":0,"imp":0,"rel":0.0,"gm":50000.0,"why":""},{"i":53,"t":"ايفون 17 برو ماكس كسر الزيرو","p":57000,"g":"17","v":"promax","s":"valid","sto":null,"bat":null,"tax":null,"box":0,"nw":1,"imp":0,"rel":-0.1857,"gm":70000.0,"why":""},{"i":54,"t":"ايفون 17 برو ماكس اللون السيلفر","p":80000,"g":"17","v":"promax","s":"valid","sto":null,"bat":null,"tax":null,"box":0,"nw":0,"imp":0,"rel":0.1429,"gm":70000.0,"why":""},{"i":55,"t":"آيفون 12 برو ماكس","p":15000,"g":"12","v":"promax","s":"valid","sto":null,"bat":null,"tax":null,"box":0,"nw":0,"imp":0,"rel":-0.1667,"gm":18000.0,"why":""},{"i":56,"t":"ايفون 16 كسر زيرو حاله لقطه نظيفه","p":45000,"g":"16","v":"base","s":"valid","sto":null,"bat":null,"tax":null,"box":0,"nw":1,"imp":0,"rel":-0.0625,"gm":48000.0,"why":""},{"i":57,"t":"iPhone 18 Pro Max – Burgundy Color – 256GB","p":86000,"g":"18","v":"promax","s":"clone","sto":256,"bat":null,"tax":null,"box":0,"nw":0,"imp":0,"rel":null,"gm":null,"why":"نسخة كوبي أو إعلان دعائي بسعر وهمي"},{"i":58,"t":"Iphone 11 like new - ايفون 11 زى الجديد","p":11700,"g":"11","v":"base","s":"valid","sto":null,"bat":null,"tax":null,"box":0,"nw":1,"imp":0,"rel":0.0636,"gm":11000.0,"why":""},{"i":59,"t":"ايفون 13 عادي","p":17000,"g":"13","v":"base","s":"valid","sto":null,"bat":null,"tax":null,"box":0,"nw":0,"imp":0,"rel":-0.2609,"gm":23000.0,"why":""},{"i":60,"t":"ايفون برو ماكس 17 استخدام 5 شهور فقط","p":80000,"g":"17","v":"promax","s":"valid","sto":null,"bat":null,"tax":null,"box":0,"nw":0,"imp":0,"rel":0.1429,"gm":70000.0,"why":""},{"i":61,"t":"آيفون 13 برو 128 للبيع","p":12000,"g":"13","v":"pro","s":"valid","sto":128,"bat":null,"tax":null,"box":0,"nw":0,"imp":0,"rel":-0.4545,"gm":22000.0,"why":""},{"i":62,"t":"ايفون 11عادي مساحه 128 بطاريع 100 متغيره ومعايا الاصليع  ومغير شاشه خلع","p":20,"g":"11","v":"base","s":"badprice","sto":128,"bat":100,"tax":null,"box":0,"nw":0,"imp":0,"rel":null,"gm":null,"why":"السعر أقل من الحد المعقول للموديل"},{"i":63,"t":"ايفون 15 برو مساحه 128 بطاريه 79 الموبيل حلتو نضيفه جدا متفتحش قبل كدا حاله الفريم زيرو ومعاه الكترت","p":42000,"g":"15","v":"pro","s":"valid","sto":128,"bat":79,"tax":null,"box":0,"nw":1,"imp":0,"rel":-0.0118,"gm":42500.0,"why":""},{"i":64,"t":"iPhone 17 Pro Max","p":60000,"g":"17","v":"promax","s":"clone","sto":null,"bat":null,"tax":null,"box":0,"nw":0,"imp":0,"rel":null,"gm":null,"why":"نسخة كوبي أو إعلان دعائي بسعر وهمي"},{"i":65,"t":"ايفون 16 بروماكس تم تنزيل السعر","p":59000,"g":"16","v":"promax","s":"valid","sto":null,"bat":null,"tax":null,"box":0,"nw":0,"imp":0,"rel":-0.0484,"gm":62000.0,"why":""},{"i":66,"t":"ايفون اكس  للبيع","p":3000,"g":"x","v":"base","s":"valid","sto":null,"bat":null,"tax":null,"box":0,"nw":0,"imp":0,"rel":-0.1429,"gm":3500.0,"why":""},{"i":67,"t":"ايفون 12 للبيع","p":12000,"g":"12","v":"base","s":"valid","sto":null,"bat":null,"tax":null,"box":0,"nw":0,"imp":0,"rel":-0.1892,"gm":14800.0,"why":""},{"i":68,"t":"ايفون 15 برو","p":41500,"g":"15","v":"pro","s":"valid","sto":null,"bat":null,"tax":null,"box":0,"nw":0,"imp":0,"rel":-0.0235,"gm":42500.0,"why":""},{"i":69,"t":"ايفون iphone","p":50000,"g":null,"v":"base","s":"clone","sto":null,"bat":null,"tax":null,"box":0,"nw":0,"imp":0,"rel":null,"gm":null,"why":"نسخة كوبي أو إعلان دعائي بسعر وهمي"},{"i":70,"t":"آيفون 14 برو ماكس 128 جيجا وارد الخارج","p":23000,"g":"14","v":"promax","s":"valid","sto":128,"bat":null,"tax":null,"box":0,"nw":0,"imp":1,"rel":-0.3947,"gm":38000.0,"why":""},{"i":71,"t":"الفون معاه كل حاجه بس الكرتون ضايعة عايز ابيعه او ابدله بي ايفون","p":11500,"g":null,"v":"base","s":"unknown","sto":null,"bat":null,"tax":null,"box":0,"nw":0,"imp":0,"rel":null,"gm":null,"why":"الموديل مش واضح في العنوان"},{"i":72,"t":"ايفون 16 برو ماكس سعة256  معاه 2 شهر امتداد الضمان","p":75000,"g":"16","v":"promax","s":"valid","sto":256,"bat":null,"tax":null,"box":0,"nw":0,"imp":0,"rel":0.2097,"gm":62000.0,"why":""},{"i":73,"t":"*متفكررش كتييرر  وإلحق اشترررري ايفون 17 الجدييييد","p":780,"g":"17","v":"base","s":"clone","sto":null,"bat":null,"tax":null,"box":0,"nw":1,"imp":0,"rel":null,"gm":null,"why":"نسخة كوبي أو إعلان دعائي بسعر وهمي"},{"i":74,"t":"ايفون 12 برو Iphone 12pro","p":22000,"g":"12","v":"pro","s":"valid","sto":null,"bat":null,"tax":null,"box":0,"nw":0,"imp":0,"rel":0.0732,"gm":20500.0,"why":""},{"i":75,"t":"ايفون 14 برو مكس بالكرتونه","p":45500,"g":"14","v":"promax","s":"valid","sto":null,"bat":null,"tax":null,"box":1,"nw":0,"imp":0,"rel":0.1974,"gm":38000.0,"why":""},{"i":76,"t":"آيفون 13 عادي","p":19000,"g":"13","v":"base","s":"valid","sto":null,"bat":null,"tax":null,"box":0,"nw":0,"imp":0,"rel":-0.1739,"gm":23000.0,"why":""},{"i":77,"t":"iphone xs max","p":6000,"g":"xs","v":"promax","s":"valid","sto":null,"bat":null,"tax":null,"box":0,"nw":0,"imp":0,"rel":-0.3684,"gm":9500.0,"why":""},{"i":78,"t":"ايفون 17 برو ماكس اورنج معفي ضريبه","p":76000,"g":"17","v":"promax","s":"valid","sto":null,"bat":null,"tax":"exempt","box":0,"nw":0,"imp":0,"rel":0.0857,"gm":70000.0,"why":""},{"i":79,"t":"ايفون 15 بطاريه 90 مساحه 128 لون اسود معفي ضريبه معاه البوكس الموبايل زيرو مفيهوش خربوش","p":35000,"g":"15","v":"base","s":"valid","sto":128,"bat":90,"tax":"exempt","box":1,"nw":1,"imp":0,"rel":0.0938,"gm":32000.0,"why":""},{"i":80,"t":"للبيع أيفون 12 بحاله ممتازه كسر زيرو","p":15500,"g":"12","v":"base","s":"valid","sto":null,"bat":null,"tax":null,"box":0,"nw":1,"imp":0,"rel":0.0473,"gm":14800.0,"why":""},{"i":81,"t":"ايفون ايت بلاص","p":6000,"g":"8","v":"base","s":"valid","sto":null,"bat":null,"tax":null,"box":0,"nw":0,"imp":0,"rel":0.0619,"gm":5650.0,"why":""},{"i":82,"t":"ايفون 15 برو ماكس 256G  بدون ملحقات الجهاز نظيف جدا","p":50000,"g":"15","v":"promax","s":"valid","sto":256,"bat":null,"tax":null,"box":0,"nw":0,"imp":0,"rel":0.0,"gm":50000.0,"why":""},{"i":83,"t":"ايفون XS حاله نادره واتر بروف","p":11800,"g":"xs","v":"base","s":"valid","sto":null,"bat":null,"tax":null,"box":0,"nw":0,"imp":0,"rel":0.18,"gm":10000.0,"why":""},{"i":84,"t":"أيفون 13 استعمال خفيف من غير خدش","p":15000,"g":"13","v":"base","s":"valid","sto":null,"bat":null,"tax":null,"box":0,"nw":0,"imp":0,"rel":-0.3478,"gm":23000.0,"why":""},{"i":85,"t":"ايفون 15 pro max","p":50000,"g":"15","v":"promax","s":"valid","sto":null,"bat":null,"tax":null,"box":0,"nw":0,"imp":0,"rel":0.0,"gm":50000.0,"why":""},{"i":86,"t":"آيفون 17 برو مااكس .","p":54999,"g":"17","v":"promax","s":"valid","sto":null,"bat":null,"tax":null,"box":0,"nw":0,"imp":0,"rel":-0.2143,"gm":70000.0,"why":""},{"i":87,"t":"آيفون 17 برو [256] جيجا [كحلي] مستعمل بحالة ممتازة","p":75000,"g":"17","v":"pro","s":"valid","sto":256,"bat":null,"tax":null,"box":0,"nw":0,"imp":0,"rel":0.0,"gm":75000.0,"why":""},{"i":88,"t":"ايفون 17 برو ماكس كوبي 1 تيرا","p":7000,"g":"17","v":"promax","s":"clone","sto":1024,"bat":null,"tax":null,"box":0,"nw":0,"imp":0,"rel":null,"gm":null,"why":"نسخة كوبي أو إعلان دعائي بسعر وهمي"},{"i":89,"t":"Iphone 17 pro max","p":69000,"g":"17","v":"promax","s":"clone","sto":null,"bat":null,"tax":null,"box":0,"nw":0,"imp":0,"rel":null,"gm":null,"why":"نسخة كوبي أو إعلان دعائي بسعر وهمي"},{"i":90,"t":"موبايل آيفون 11 عادي","p":10500,"g":"11","v":"base","s":"valid","sto":null,"bat":null,"tax":null,"box":0,"nw":0,"imp":0,"rel":-0.0455,"gm":11000.0,"why":""},{"i":91,"t":"ايفون 17 pro بحاله ممتازه للبيع ..","p":70000,"g":"17","v":"pro","s":"valid","sto":null,"bat":null,"tax":null,"box":0,"nw":0,"imp":0,"rel":-0.0667,"gm":75000.0,"why":""},{"i":92,"t":"ايفون 13 برو","p":25500,"g":"13","v":"pro","s":"valid","sto":null,"bat":null,"tax":null,"box":0,"nw":0,"imp":0,"rel":0.1591,"gm":22000.0,"why":""},{"i":93,"t":"ايفون 13 عادي","p":16000,"g":"13","v":"base","s":"valid","sto":null,"bat":null,"tax":null,"box":0,"nw":0,"imp":0,"rel":-0.3043,"gm":23000.0,"why":""},{"i":94,"t":"ايفون 13 عادي للبيع","p":16000,"g":"13","v":"base","s":"valid","sto":null,"bat":null,"tax":null,"box":0,"nw":0,"imp":0,"rel":-0.3043,"gm":23000.0,"why":""},{"i":95,"t":"ايفون 11عادي","p":10000,"g":"11","v":"base","s":"valid","sto":null,"bat":null,"tax":null,"box":0,"nw":0,"imp":0,"rel":-0.0909,"gm":11000.0,"why":""},{"i":96,"t":"Iphone 13 pro max ايفون 13 برو ماكس","p":39500,"g":"13","v":"promax","s":"valid","sto":null,"bat":null,"tax":null,"box":0,"nw":0,"imp":0,"rel":0.1286,"gm":35000.0,"why":""},{"i":97,"t":"ايفون اكس مساحه 64 بطاريه 72 ف كسر ف الضهر الخبطه الي ف الشاشه دي","p":3500,"g":"x","v":"base","s":"valid","sto":64,"bat":72,"tax":null,"box":0,"nw":0,"imp":0,"rel":0.0,"gm":3500.0,"why":""},{"i":98,"t":"ايفون xs max للبيع","p":9500,"g":"xs","v":"promax","s":"valid","sto":null,"bat":null,"tax":null,"box":0,"nw":0,"imp":0,"rel":0.0,"gm":9500.0,"why":""},{"i":99,"t":"ايفون 11برو ماكس 512","p":13500,"g":"11","v":"promax","s":"valid","sto":512,"bat":null,"tax":null,"box":0,"nw":0,"imp":0,"rel":0.0,"gm":13500.0,"why":""},{"i":100,"t":"ايفون 16plus","p":50000,"g":"16","v":"plus","s":"valid","sto":null,"bat":null,"tax":null,"box":0,"nw":0,"imp":0,"rel":0.1173,"gm":44750.0,"why":""},{"i":101,"t":"للبدل ب ايفون oneplus 11r iPhone","p":14500,"g":"11","v":"plus","s":"other","sto":null,"bat":null,"tax":null,"box":0,"nw":0,"imp":0,"rel":null,"gm":null,"why":"إكسسوار / منتج مش آيفون"},{"i":102,"t":"ايفون 17 برو","p":500,"g":"17","v":"pro","s":"clone","sto":null,"bat":null,"tax":null,"box":0,"nw":0,"imp":0,"rel":null,"gm":null,"why":"نسخة كوبي أو إعلان دعائي بسعر وهمي"},{"i":103,"t":"iPhone 14 pro max ايفون 14 برو ماكس","p":23500,"g":"14","v":"promax","s":"valid","sto":null,"bat":null,"tax":null,"box":0,"nw":0,"imp":0,"rel":-0.3816,"gm":38000.0,"why":""},{"i":104,"t":"إيفون 17 برو ماكس","p":60500,"g":"17","v":"promax","s":"valid","sto":null,"bat":null,"tax":null,"box":0,"nw":0,"imp":0,"rel":-0.1357,"gm":70000.0,"why":""},{"i":105,"t":"تليفون ايفون 14 للبيع استعمال خفيف كم شهر فقط   iPhone14Plus","p":35000,"g":"14","v":"plus","s":"valid","sto":null,"bat":null,"tax":null,"box":0,"nw":0,"imp":0,"rel":0.0769,"gm":32500.0,"why":""},{"i":106,"t":"موبيل آيفون 12 128 جيجا بطارية 77٪","p":15000,"g":"12","v":"base","s":"valid","sto":128,"bat":77,"tax":null,"box":0,"nw":0,"imp":0,"rel":0.0135,"gm":14800.0,"why":""},{"i":107,"t":"ايفون 13للبيل او للبدل ببرو ماكس دفع فرف","p":27000,"g":"13","v":"promax","s":"valid","sto":null,"bat":null,"tax":null,"box":0,"nw":0,"imp":0,"rel":-0.2286,"gm":35000.0,"why":""},{"i":108,"t":"IPhone 17 promax orange Middle East with Tax","p":78000,"g":"17","v":"promax","s":"clone","sto":null,"bat":null,"tax":"due","box":0,"nw":0,"imp":0,"rel":null,"gm":null,"why":"نسخة كوبي أو إعلان دعائي بسعر وهمي"},{"i":109,"t":"iPhone 17 pro عليه ضريبه","p":50000,"g":"17","v":"pro","s":"clone","sto":null,"bat":null,"tax":"due","box":0,"nw":0,"imp":0,"rel":null,"gm":null,"why":"نسخة كوبي أو إعلان دعائي بسعر وهمي"},{"i":110,"t":"ايفون 14برو","p":36000,"g":"14","v":"pro","s":"valid","sto":null,"bat":null,"tax":null,"box":0,"nw":0,"imp":0,"rel":-0.0137,"gm":36499.5,"why":""},{"i":111,"t":"2جراب ايفون 13 Pro Max","p":1800,"g":"13","v":"promax","s":"other","sto":null,"bat":null,"tax":null,"box":0,"nw":0,"imp":0,"rel":null,"gm":null,"why":"إكسسوار / منتج مش آيفون"},{"i":112,"t":"iPhone 6s Plus للبيع  حالة التليفون ممتازة جدًا البطارية 100%  متغير بطاريه فقط","p":800,"g":"6s","v":"plus","s":"badprice","sto":null,"bat":100,"tax":null,"box":0,"nw":0,"imp":0,"rel":null,"gm":null,"why":"السعر أقل من الحد المعقول للموديل"},{"i":113,"t":"ايفون 12  بحالة الزيرو  مساحه 128g بطاريه 75 مغيرش اي حاجه نهائي  0 ضريبه  معاه كرتونه وشاحن اصلي","p":5000,"g":"12","v":"base","s":"badprice","sto":128,"bat":75,"tax":"exempt","box":1,"nw":1,"imp":0,"rel":null,"gm":null,"why":"السعر أقل من الحد المعقول للموديل"},{"i":114,"t":"ايفون 12 ميني  مساحه 128 بطاريه 81  مش معاه غير شاحن الاصلي بتاعو","p":1500,"g":"12","v":"mini","s":"badprice","sto":128,"bat":81,"tax":null,"box":0,"nw":0,"imp":0,"rel":null,"gm":null,"why":"السعر أقل من الحد المعقول للموديل"},{"i":115,"t":"ايفون 17 pro max","p":83000,"g":"17","v":"promax","s":"valid","sto":null,"bat":null,"tax":null,"box":0,"nw":0,"imp":0,"rel":0.1857,"gm":70000.0,"why":""},{"i":116,"t":"هاتف ايفون 17 لبيع اوللبدل ايفون هاي كوبي امريكي باكس اس","p":8000,"g":"17","v":"base","s":"clone","sto":null,"bat":null,"tax":null,"box":0,"nw":0,"imp":1,"rel":null,"gm":null,"why":"نسخة كوبي أو إعلان دعائي بسعر وهمي"},{"i":117,"t":"ايفون 14 برو  256 جيجا","p":22000,"g":"14","v":"pro","s":"valid","sto":256,"bat":null,"tax":null,"box":0,"nw":0,"imp":0,"rel":-0.3973,"gm":36499.5,"why":""},{"i":118,"t":"ايفون 12 برو ماكس","p":17500,"g":"12","v":"promax","s":"valid","sto":null,"bat":null,"tax":null,"box":0,"nw":0,"imp":0,"rel":-0.0278,"gm":18000.0,"why":""},{"i":119,"t":"ايفون 11 للبيع","p":11000,"g":"11","v":"base","s":"valid","sto":null,"bat":null,"tax":null,"box":0,"nw":0,"imp":0,"rel":0.0,"gm":11000.0,"why":""},{"i":120,"t":"iPhone xs max","p":6000,"g":"xs","v":"promax","s":"dup","sto":null,"bat":null,"tax":null,"box":0,"nw":0,"imp":0,"rel":null,"gm":null,"why":"إعلان مكرر"},{"i":121,"t":"اكسيورات ايفون اصلي البيع السعر نهائي  التواصل واتساب رجاء اولا ولايوجد فصال","p":5000,"g":null,"v":"base","s":"other","sto":null,"bat":null,"tax":null,"box":0,"nw":0,"imp":0,"rel":null,"gm":null,"why":"إكسسوار / منتج مش آيفون"},{"i":122,"t":"ايفون 15برو ماكس","p":38000,"g":"15","v":"promax","s":"valid","sto":null,"bat":null,"tax":null,"box":0,"nw":0,"imp":0,"rel":-0.24,"gm":50000.0,"why":""},{"i":123,"t":"ايفون 13عادي حاله زيرو بطاريه 89","p":18000,"g":"13","v":"base","s":"valid","sto":null,"bat":89,"tax":null,"box":0,"nw":1,"imp":0,"rel":-0.2174,"gm":23000.0,"why":""},{"i":124,"t":"ايفون 16 جديد للبيع","p":52000,"g":"16","v":"base","s":"valid","sto":null,"bat":null,"tax":null,"box":0,"nw":1,"imp":0,"rel":0.0833,"gm":48000.0,"why":""},{"i":125,"t":"بطارية آيفون 12 برو ماكس هاي كوبي الإماراتي","p":600,"g":"12","v":"promax","s":"other","sto":null,"bat":null,"tax":null,"box":0,"nw":0,"imp":1,"rel":null,"gm":null,"why":"إكسسوار / منتج مش آيفون"},{"i":126,"t":"Iphone 17 pro","p":55000,"g":"17","v":"pro","s":"clone","sto":null,"bat":null,"tax":null,"box":0,"nw":0,"imp":0,"rel":null,"gm":null,"why":"نسخة كوبي أو إعلان دعائي بسعر وهمي"},{"i":127,"t":"ايفون 11 برو ماكس","p":11500,"g":"11","v":"promax","s":"valid","sto":null,"bat":null,"tax":null,"box":0,"nw":0,"imp":0,"rel":-0.1481,"gm":13500.0,"why":""},{"i":128,"t":"ايفون 11 عادي","p":8000,"g":"11","v":"base","s":"valid","sto":null,"bat":null,"tax":null,"box":0,"nw":0,"imp":0,"rel":-0.2727,"gm":11000.0,"why":""},{"i":129,"t":"iPhone xs max","p":5000,"g":"xs","v":"promax","s":"valid","sto":null,"bat":null,"tax":null,"box":0,"nw":0,"imp":0,"rel":-0.4737,"gm":9500.0,"why":""},{"i":130,"t":"iPhone 11pro max","p":10000,"g":"11","v":"promax","s":"valid","sto":null,"bat":null,"tax":null,"box":0,"nw":0,"imp":0,"rel":-0.2593,"gm":13500.0,"why":""},{"i":131,"t":"ايفون 14 للبيع","p":22000,"g":"14","v":"base","s":"valid","sto":null,"bat":null,"tax":null,"box":0,"nw":0,"imp":0,"rel":0.0,"gm":22000.0,"why":""},{"i":132,"t":"تلفون ايفون استخدم بناتي زيرو","p":9000,"g":null,"v":"base","s":"unknown","sto":null,"bat":null,"tax":null,"box":0,"nw":1,"imp":0,"rel":null,"gm":null,"why":"الموديل مش واضح في العنوان"},{"i":133,"t":"ايفون 17 بروماكس","p":75000,"g":"17","v":"promax","s":"valid","sto":null,"bat":null,"tax":null,"box":0,"nw":0,"imp":0,"rel":0.0714,"gm":70000.0,"why":""},{"i":134,"t":"ايفون 15 عادي زيرو حرفيا مفيهوش خدش","p":33000,"g":"15","v":"base","s":"valid","sto":null,"bat":null,"tax":null,"box":0,"nw":1,"imp":0,"rel":0.0312,"gm":32000.0,"why":""},{"i":135,"t":"ايفون 12- iphone 12","p":13000,"g":"12","v":"base","s":"valid","sto":null,"bat":null,"tax":null,"box":0,"nw":0,"imp":0,"rel":-0.1216,"gm":14800.0,"why":""},{"i":136,"t":"آيفون 11 برو مكس 256 للبيع","p":11000,"g":"11","v":"promax","s":"valid","sto":256,"bat":null,"tax":null,"box":0,"nw":0,"imp":0,"rel":-0.1852,"gm":13500.0,"why":""},{"i":137,"t":"ايفون 13 كسر زيرو 256G","p":25000,"g":"13","v":"base","s":"valid","sto":256,"bat":null,"tax":null,"box":0,"nw":1,"imp":0,"rel":0.087,"gm":23000.0,"why":""},{"i":138,"t":"ايفون 11 مساحه 128 مش مغير حاجه كرتونه شاحن سماعه بطاريه 70 السعر 12500","p":12500,"g":"11","v":"base","s":"valid","sto":128,"bat":70,"tax":null,"box":1,"nw":0,"imp":0,"rel":0.1364,"gm":11000.0,"why":""},{"i":139,"t":"ايفون 17 برو","p":75000,"g":"17","v":"pro","s":"valid","sto":null,"bat":null,"tax":null,"box":0,"nw":0,"imp":0,"rel":0.0,"gm":75000.0,"why":""},{"i":140,"t":"للبيع ايفون 13عادي 256 بطاريه 75عليه ضريبه متفتحش ولا غير اي حاجه السعر 15000","p":15000,"g":"13","v":"base","s":"valid","sto":256,"bat":75,"tax":"due","box":0,"nw":0,"imp":0,"rel":-0.3478,"gm":23000.0,"why":""},{"i":141,"t":"قابل للتفاوض i Phone 15 Pro Max  - ابل ايفون 8 رام مساحة 256 متفتحش ولا اتغير فيه اي حاجة","p":51000,"g":"15","v":"promax","s":"valid","sto":256,"bat":null,"tax":null,"box":0,"nw":0,"imp":0,"rel":0.02,"gm":50000.0,"why":""},{"i":142,"t":"ايفون 12 عادي للبيع","p":11000,"g":"12","v":"base","s":"valid","sto":null,"bat":null,"tax":null,"box":0,"nw":0,"imp":0,"rel":-0.2568,"gm":14800.0,"why":""},{"i":143,"t":"ايفون 12 مساحه 128جيجا مغير شاشه GX  فيس اي دي واقف الجهاز كل حاجه فيه تمام البطاريه الاصليه بتعته ا","p":12500,"g":"12","v":"base","s":"valid","sto":128,"bat":null,"tax":null,"box":0,"nw":0,"imp":0,"rel":-0.1554,"gm":14800.0,"why":""},{"i":144,"t":"ايفون 13bromax","p":29000,"g":"13","v":"base","s":"valid","sto":null,"bat":null,"tax":null,"box":0,"nw":0,"imp":0,"rel":0.2609,"gm":23000.0,"why":""},{"i":145,"t":"ايفون 11 مساحه 128جيجا وتر بروف عليه ضريبه 3000  بطاريه 71 الجهاز فيه 4شهور الشريحه شغاله بدون وقف","p":8500,"g":"11","v":"base","s":"valid","sto":128,"bat":71,"tax":"due","box":0,"nw":0,"imp":0,"rel":-0.2273,"gm":11000.0,"why":""},{"i":146,"t":"ايفون 7 بلس مساحه 128 مافوش خربوش زيرو زي الجديد مش مغير حاجه زي ما واضح في 3tols ومتاح الكشف","p":3500,"g":"7","v":"plus","s":"valid","sto":128,"bat":null,"tax":null,"box":0,"nw":1,"imp":0,"rel":-0.2222,"gm":4500.0,"why":""},{"i":147,"t":"# ايفون 17 بروماكس...فرست هاى كوبى أول درجه بعد الأصلى مباشرة","p":500,"g":"17","v":"promax","s":"clone","sto":null,"bat":null,"tax":null,"box":0,"nw":0,"imp":0,"rel":null,"gm":null,"why":"نسخة كوبي أو إعلان دعائي بسعر وهمي"},{"i":148,"t":"درجة أولى iPhone 17 Pro ماكس كوبي","p":6500,"g":"17","v":"promax","s":"clone","sto":null,"bat":null,"tax":null,"box":0,"nw":0,"imp":0,"rel":null,"gm":null,"why":"نسخة كوبي أو إعلان دعائي بسعر وهمي"},{"i":149,"t":"iphone 17 pro max  silver أيفون 17 برو  ضمان trade line ماكس متبرشم","p":95000,"g":"17","v":"promax","s":"clone","sto":null,"bat":null,"tax":"exempt","box":0,"nw":1,"imp":0,"rel":null,"gm":null,"why":"نسخة كوبي أو إعلان دعائي بسعر وهمي"},{"i":150,"t":"ايفون 18برو ماكس كوبي و17برو ماكس كوبي للبيع","p":3500,"g":"18","v":"promax","s":"clone","sto":null,"bat":null,"tax":null,"box":0,"nw":0,"imp":0,"rel":null,"gm":null,"why":"نسخة كوبي أو إعلان دعائي بسعر وهمي"},{"i":151,"t":"ايفون xs حاله ممتازه ومش مغير اي حاجه خالص","p":7500,"g":"xs","v":"base","s":"valid","sto":null,"bat":null,"tax":"exempt","box":0,"nw":0,"imp":0,"rel":-0.25,"gm":10000.0,"why":""},{"i":152,"t":"ايفون 12 عادي","p":14800,"g":"12","v":"base","s":"valid","sto":null,"bat":null,"tax":null,"box":0,"nw":0,"imp":0,"rel":0.0,"gm":14800.0,"why":""},{"i":153,"t":"Iphone 17 pro max","p":73500,"g":"17","v":"promax","s":"clone","sto":null,"bat":null,"tax":null,"box":0,"nw":0,"imp":0,"rel":null,"gm":null,"why":"نسخة كوبي أو إعلان دعائي بسعر وهمي"},{"i":154,"t":"ايفون 14 عادي","p":18000,"g":"14","v":"base","s":"valid","sto":null,"bat":null,"tax":null,"box":0,"nw":0,"imp":0,"rel":-0.1818,"gm":22000.0,"why":""},{"i":155,"t":"iphone 16plus ,128gb,used","p":35000,"g":"16","v":"plus","s":"valid","sto":128,"bat":null,"tax":null,"box":0,"nw":0,"imp":0,"rel":-0.2179,"gm":44750.0,"why":""},{"i":156,"t":"هاتف ايفون 16برو","p":56,"g":"16","v":"pro","s":"badprice","sto":null,"bat":null,"tax":null,"box":0,"nw":0,"imp":0,"rel":null,"gm":null,"why":"السعر أقل من الحد المعقول للموديل"},{"i":157,"t":"ايفون 16 بلس نضيف","p":40000,"g":"16","v":"plus","s":"valid","sto":null,"bat":null,"tax":null,"box":0,"nw":1,"imp":0,"rel":-0.1061,"gm":44750.0,"why":""},{"i":158,"t":"ايفون 16 بلص 128 بطارية 96  260 شحنه  معاه البوكس والشاحن وجرابات  عليه ضريبة 18 الف فترة سماح 4 شهر","p":34000,"g":"16","v":"plus","s":"valid","sto":128,"bat":96,"tax":"due","box":1,"nw":0,"imp":0,"rel":-0.2402,"gm":44750.0,"why":""},{"i":159,"t":"ايفون 11 مستعمل للبيع","p":14000,"g":"11","v":"base","s":"valid","sto":null,"bat":null,"tax":null,"box":0,"nw":0,"imp":0,"rel":0.2727,"gm":11000.0,"why":""},{"i":160,"t":"ايفون 13 برو","p":28000,"g":"13","v":"pro","s":"valid","sto":null,"bat":null,"tax":null,"box":0,"nw":0,"imp":0,"rel":0.2727,"gm":22000.0,"why":""},{"i":161,"t":"ايفون 8بلس","p":4500,"g":"8","v":"plus","s":"valid","sto":null,"bat":null,"tax":null,"box":0,"nw":0,"imp":0,"rel":-0.2174,"gm":5750.0,"why":""},{"i":162,"t":"ايفون 8بلس","p":4500,"g":"8","v":"plus","s":"dup","sto":null,"bat":null,"tax":null,"box":0,"nw":0,"imp":0,"rel":null,"gm":null,"why":"إعلان مكرر"},{"i":163,"t":"ايفون 17 برو ماكس*اهلا وسهلا بحضرتك يافندم حضرتك نورتنا وشرفتنا  ايفون 17برو ماكس.. ال","p":7000,"g":"17","v":"promax","s":"clone","sto":null,"bat":null,"tax":null,"box":0,"nw":0,"imp":0,"rel":null,"gm":null,"why":"نسخة كوبي أو إعلان دعائي بسعر وهمي"},{"i":164,"t":"ايفون 13 السعر 25000","p":25000,"g":"13","v":"base","s":"valid","sto":null,"bat":null,"tax":null,"box":0,"nw":0,"imp":0,"rel":0.087,"gm":23000.0,"why":""},{"i":165,"t":"Apple iPhone 13 ابل ايفون 13عادي","p":24000,"g":"13","v":"base","s":"valid","sto":null,"bat":null,"tax":null,"box":0,"nw":0,"imp":0,"rel":0.0435,"gm":23000.0,"why":""},{"i":166,"t":"آيفون 13 ابيض مدفوع ضريبته بطاريه 92% معاه ال بوكس و الشاحن الأصلي مش مغير حاجه متاح الكشف عليه","p":28000,"g":"13","v":"base","s":"valid","sto":null,"bat":92,"tax":"exempt","box":1,"nw":0,"imp":0,"rel":0.2174,"gm":23000.0,"why":""},{"i":167,"t":"ايفون 17 برو ماكس كسر زيرو","p":87000,"g":"17","v":"promax","s":"valid","sto":null,"bat":null,"tax":null,"box":0,"nw":1,"imp":0,"rel":0.2429,"gm":70000.0,"why":""},{"i":168,"t":"ايفون 8مساحه 256بطاريه 77 معاه كل مشتملاته  عيوبه في خبطه في الجنب مش ماثره علي حاجه","p":5000,"g":"8","v":"base","s":"valid","sto":256,"bat":77,"tax":null,"box":0,"nw":0,"imp":0,"rel":-0.115,"gm":5650.0,"why":""},{"i":169,"t":"ايفون 15 للبيع او للبدل","p":33000,"g":"15","v":"base","s":"valid","sto":null,"bat":null,"tax":null,"box":0,"nw":0,"imp":0,"rel":0.0312,"gm":32000.0,"why":""},{"i":170,"t":"ايفون 15 برو","p":42000,"g":"15","v":"pro","s":"valid","sto":null,"bat":null,"tax":null,"box":0,"nw":0,"imp":0,"rel":-0.0118,"gm":42500.0,"why":""},{"i":171,"t":"ايفون 15 برو ماكس للبيع كسر زيرو متفتحش بطاريه 88٪ لقطه","p":47000,"g":"15","v":"promax","s":"valid","sto":null,"bat":88,"tax":null,"box":0,"nw":1,"imp":0,"rel":-0.06,"gm":50000.0,"why":""},{"i":172,"t":"ايفون 13 ميني للبيع او البدل","p":13000,"g":"13","v":"mini","s":"valid","sto":null,"bat":null,"tax":null,"box":0,"nw":0,"imp":0,"rel":-0.1613,"gm":15499.5,"why":""},{"i":173,"t":"جهاز سامسونج ا16 للتبديل بجهاز ايفون Samsung Galaxy A16 4G 128/6","p":7800,"g":"16","v":"base","s":"other","sto":128,"bat":null,"tax":null,"box":0,"nw":0,"imp":0,"rel":null,"gm":null,"why":"إكسسوار / منتج مش آيفون"},{"i":174,"t":"ايفون 16 كسر زيرو بطاريه 96","p":48500,"g":"16","v":"base","s":"valid","sto":null,"bat":96,"tax":null,"box":0,"nw":1,"imp":0,"rel":0.0104,"gm":48000.0,"why":""},{"i":175,"t":"آيفون 12 وتر بروف","p":15250,"g":"12","v":"base","s":"valid","sto":null,"bat":null,"tax":null,"box":0,"nw":0,"imp":0,"rel":0.0304,"gm":14800.0,"why":""},{"i":176,"t":"شاشه آيفون x وبطارية","p":2000,"g":"x","v":"base","s":"other","sto":null,"bat":null,"tax":null,"box":0,"nw":0,"imp":0,"rel":null,"gm":null,"why":"إكسسوار / منتج مش آيفون"},{"i":177,"t":"ايفون اكس اس ماكس للبيع بحاله ممتازه مساحه 256 Iphone xs max for sale","p":9500,"g":"xs","v":"promax","s":"valid","sto":256,"bat":null,"tax":null,"box":0,"nw":0,"imp":0,"rel":0.0,"gm":9500.0,"why":""},{"i":178,"t":"ايفون 17 بروماكس","p":560,"g":"17","v":"promax","s":"clone","sto":null,"bat":null,"tax":null,"box":0,"nw":0,"imp":0,"rel":null,"gm":null,"why":"نسخة كوبي أو إعلان دعائي بسعر وهمي"},{"i":179,"t":"ايفون 6s plus","p":2500,"g":"6s","v":"plus","s":"valid","sto":null,"bat":null,"tax":null,"box":0,"nw":0,"imp":0,"rel":0.0204,"gm":2450.0,"why":""},{"i":180,"t":"ايفون 13 عادي لونه زيتي","p":20000,"g":"13","v":"base","s":"valid","sto":null,"bat":null,"tax":null,"box":0,"nw":0,"imp":0,"rel":-0.1304,"gm":23000.0,"why":""},{"i":181,"t":"ايفون 13pro","p":31000,"g":"13","v":"pro","s":"valid","sto":null,"bat":null,"tax":null,"box":0,"nw":0,"imp":0,"rel":0.4091,"gm":22000.0,"why":""},{"i":182,"t":"ايفون 8 بلس 128جيجا","p":5500,"g":"8","v":"plus","s":"valid","sto":128,"bat":null,"tax":null,"box":0,"nw":0,"imp":0,"rel":-0.0435,"gm":5750.0,"why":""},{"i":183,"t":"IPHONE 17 PRO MAX","p":1000,"g":"17","v":"promax","s":"clone","sto":null,"bat":null,"tax":null,"box":0,"nw":0,"imp":0,"rel":null,"gm":null,"why":"نسخة كوبي أو إعلان دعائي بسعر وهمي"},{"i":184,"t":"ايفون 17باروماكس","p":7000,"g":"17","v":"promax","s":"clone","sto":null,"bat":null,"tax":null,"box":0,"nw":0,"imp":0,"rel":null,"gm":null,"why":"نسخة كوبي أو إعلان دعائي بسعر وهمي"},{"i":185,"t":"ايفون 8بلس","p":5100,"g":"8","v":"plus","s":"valid","sto":null,"bat":null,"tax":null,"box":0,"nw":0,"imp":0,"rel":-0.113,"gm":5750.0,"why":""},{"i":186,"t":"ايفون 14 plus","p":35000,"g":"14","v":"plus","s":"valid","sto":null,"bat":null,"tax":null,"box":0,"nw":0,"imp":0,"rel":0.0769,"gm":32500.0,"why":""},{"i":187,"t":"IPHONE 18 PRO MAX VIP  مميزات الشراء من عندنا:  المعاينة والتجربة قبل الدفع عند الاستلام EDITION","p":7500,"g":"18","v":"promax","s":"clone","sto":null,"bat":null,"tax":null,"box":0,"nw":0,"imp":0,"rel":null,"gm":null,"why":"نسخة كوبي أو إعلان دعائي بسعر وهمي"},{"i":188,"t":"ايفون 13 حاله كسر زيرو لقطه مساحه 128","p":18500,"g":"13","v":"base","s":"valid","sto":128,"bat":null,"tax":null,"box":0,"nw":1,"imp":0,"rel":-0.1957,"gm":23000.0,"why":""},{"i":189,"t":"ايفون 8 بلس بطاريه 92 مساحه 64 نموذج N","p":9000,"g":"8","v":"plus","s":"valid","sto":64,"bat":92,"tax":null,"box":0,"nw":0,"imp":0,"rel":0.5652,"gm":5750.0,"why":""},{"i":190,"t":"ايفون 17 برو ماكس","p":5600,"g":"17","v":"promax","s":"clone","sto":null,"bat":null,"tax":null,"box":0,"nw":0,"imp":0,"rel":null,"gm":null,"why":"نسخة كوبي أو إعلان دعائي بسعر وهمي"},{"i":191,"t":"ايفون 17 بروماكس","p":1000,"g":"17","v":"promax","s":"clone","sto":null,"bat":null,"tax":null,"box":0,"nw":0,"imp":0,"rel":null,"gm":null,"why":"نسخة كوبي أو إعلان دعائي بسعر وهمي"},{"i":192,"t":"ايفون 13 blue","p":21000,"g":"13","v":"base","s":"valid","sto":null,"bat":null,"tax":null,"box":0,"nw":0,"imp":0,"rel":-0.087,"gm":23000.0,"why":""},{"i":193,"t":"ايفون 17باروماكس","p":7750,"g":"17","v":"promax","s":"clone","sto":null,"bat":null,"tax":null,"box":0,"nw":0,"imp":0,"rel":null,"gm":null,"why":"نسخة كوبي أو إعلان دعائي بسعر وهمي"},{"i":194,"t":"ايفون 14بلس","p":26000,"g":"14","v":"plus","s":"valid","sto":null,"bat":null,"tax":null,"box":0,"nw":0,"imp":0,"rel":-0.2,"gm":32500.0,"why":""},{"i":195,"t":"آيفون اكس إس ماكس للبيع","p":10500,"g":"xs","v":"promax","s":"valid","sto":null,"bat":null,"tax":null,"box":0,"nw":0,"imp":0,"rel":0.1053,"gm":9500.0,"why":""},{"i":196,"t":"ايفون 11 برو ماكس","p":13000,"g":"11","v":"promax","s":"valid","sto":null,"bat":null,"tax":null,"box":0,"nw":0,"imp":0,"rel":-0.037,"gm":13500.0,"why":""},{"i":197,"t":"ايفون 17  للبيع","p":42500,"g":"17","v":"base","s":"valid","sto":null,"bat":null,"tax":null,"box":0,"nw":0,"imp":0,"rel":0.0,"gm":42500.0,"why":""},{"i":198,"t":"للبيع ايفون 13 جديد","p":27000,"g":"13","v":"base","s":"valid","sto":null,"bat":null,"tax":null,"box":0,"nw":1,"imp":0,"rel":0.1739,"gm":23000.0,"why":""},{"i":199,"t":"ايفون 17باروماكس","p":5000,"g":"17","v":"promax","s":"clone","sto":null,"bat":null,"tax":null,"box":0,"nw":0,"imp":0,"rel":null,"gm":null,"why":"نسخة كوبي أو إعلان دعائي بسعر وهمي"},{"i":200,"t":"ايفن اكس للبيع","p":8500,"g":"x","v":"base","s":"valid","sto":null,"bat":null,"tax":null,"box":0,"nw":0,"imp":0,"rel":1.4286,"gm":3500.0,"why":""},{"i":201,"t":"ايفون 11 برو ماكس 256","p":19000,"g":"11","v":"promax","s":"valid","sto":256,"bat":null,"tax":null,"box":0,"nw":0,"imp":0,"rel":0.4074,"gm":13500.0,"why":""},{"i":202,"t":"ايفون 15  بطاريه 78 مساحه 128  لون اسود  معفي ضريبه  معاه البوكس  الموبايل زيرو مفيهوش خربوش","p":32000,"g":"15","v":"base","s":"valid","sto":128,"bat":78,"tax":"exempt","box":1,"nw":1,"imp":0,"rel":0.0,"gm":32000.0,"why":""},{"i":203,"t":"ايفون 12 برو ماكس","p":13500,"g":"12","v":"promax","s":"valid","sto":null,"bat":null,"tax":null,"box":0,"nw":0,"imp":0,"rel":-0.25,"gm":18000.0,"why":""},{"i":204,"t":"آيفون 11برو حالته زيرو مساحه 64 بطاريه 71 متفتحش قبل كده وفي معاينه","p":13000,"g":"11","v":"pro","s":"valid","sto":64,"bat":71,"tax":null,"box":0,"nw":1,"imp":0,"rel":0.0,"gm":13000.0,"why":""},{"i":205,"t":"اير تاج سامسونج جديد  اير تاج ايفون جديد","p":1300,"g":null,"v":"air","s":"other","sto":null,"bat":null,"tax":null,"box":0,"nw":1,"imp":0,"rel":null,"gm":null,"why":"إكسسوار / منتج مش آيفون"},{"i":206,"t":"iPhone 6s Plus","p":2400,"g":"6s","v":"plus","s":"valid","sto":null,"bat":null,"tax":null,"box":0,"nw":0,"imp":0,"rel":-0.0204,"gm":2450.0,"why":""},{"i":207,"t":"ايفون اكس اس ماكس","p":5499,"g":"xs","v":"promax","s":"valid","sto":null,"bat":null,"tax":null,"box":0,"nw":0,"imp":0,"rel":-0.4212,"gm":9500.0,"why":""},{"i":208,"t":"ايفون 17باروماكس","p":8600,"g":"17","v":"promax","s":"clone","sto":null,"bat":null,"tax":null,"box":0,"nw":0,"imp":0,"rel":null,"gm":null,"why":"نسخة كوبي أو إعلان دعائي بسعر وهمي"},{"i":209,"t":"iPhone 17 Air","p":60000,"g":"17","v":"air","s":"clone","sto":null,"bat":null,"tax":null,"box":0,"nw":0,"imp":0,"rel":null,"gm":null,"why":"نسخة كوبي أو إعلان دعائي بسعر وهمي"},{"i":210,"t":"ايفون 11 للبيع الله اكبر","p":12800,"g":"11","v":"base","s":"valid","sto":null,"bat":null,"tax":null,"box":0,"nw":0,"imp":0,"rel":0.1636,"gm":11000.0,"why":""},{"i":211,"t":"Iphone 17 pro max","p":7000,"g":"17","v":"promax","s":"clone","sto":null,"bat":null,"tax":null,"box":0,"nw":0,"imp":0,"rel":null,"gm":null,"why":"نسخة كوبي أو إعلان دعائي بسعر وهمي"},{"i":212,"t":"iPhone 18 Pro Max 256GB no active","p":98000,"g":"18","v":"promax","s":"clone","sto":256,"bat":null,"tax":null,"box":0,"nw":0,"imp":0,"rel":null,"gm":null,"why":"نسخة كوبي أو إعلان دعائي بسعر وهمي"},{"i":213,"t":"آيفون xs مساحه 256 جهاز غني عن التعريف معاه الشاحن الأصلي موبايل شرعي  نموذج mمغير بطاريه فقط","p":12000,"g":"xs","v":"base","s":"valid","sto":256,"bat":null,"tax":null,"box":0,"nw":0,"imp":0,"rel":0.2,"gm":10000.0,"why":""},{"i":214,"t":"جهاز ايفون 17 برو ماكس للبيع","p":5600,"g":"17","v":"promax","s":"clone","sto":null,"bat":null,"tax":null,"box":0,"nw":0,"imp":0,"rel":null,"gm":null,"why":"نسخة كوبي أو إعلان دعائي بسعر وهمي"},{"i":215,"t":"ايفون 13  مستعمل","p":28000,"g":"13","v":"base","s":"valid","sto":null,"bat":null,"tax":null,"box":0,"nw":0,"imp":0,"rel":0.2174,"gm":23000.0,"why":""},{"i":216,"t":"أيفون 13 برو ماكس 1 تيرا","p":38000,"g":"13","v":"promax","s":"valid","sto":1024,"bat":null,"tax":null,"box":0,"nw":0,"imp":0,"rel":0.0857,"gm":35000.0,"why":""},{"i":217,"t":"ايفون 8مساحه 256بطاريه 78","p":5300,"g":"8","v":"base","s":"valid","sto":256,"bat":78,"tax":null,"box":0,"nw":0,"imp":0,"rel":-0.0619,"gm":5650.0,"why":""},{"i":218,"t":"ايفون xsmax","p":15000,"g":"xs","v":"promax","s":"valid","sto":null,"bat":null,"tax":null,"box":0,"nw":0,"imp":0,"rel":0.5789,"gm":9500.0,"why":""},{"i":219,"t":"ايفون 14 برو ماكس للبيع","p":30000,"g":"14","v":"promax","s":"valid","sto":null,"bat":null,"tax":null,"box":0,"nw":0,"imp":0,"rel":-0.2105,"gm":38000.0,"why":""},{"i":220,"t":"iPhone 17 Pro Max Orange 256GB","p":88000,"g":"17","v":"promax","s":"clone","sto":256,"bat":null,"tax":null,"box":0,"nw":0,"imp":0,"rel":null,"gm":null,"why":"نسخة كوبي أو إعلان دعائي بسعر وهمي"},{"i":221,"t":"ايفون 7بلس 5500ج","p":5000,"g":"7","v":"plus","s":"valid","sto":null,"bat":null,"tax":null,"box":0,"nw":0,"imp":0,"rel":0.1111,"gm":4500.0,"why":""},{"i":222,"t":"آيفون 16 كسر زيروووو ولا غلطه ولا غلطه","p":48000,"g":"16","v":"base","s":"valid","sto":null,"bat":null,"tax":null,"box":0,"nw":1,"imp":0,"rel":0.0,"gm":48000.0,"why":""},{"i":223,"t":"ايفون 14 استعمال 8 شهور من كويت","p":39000,"g":"14","v":"base","s":"valid","sto":null,"bat":null,"tax":null,"box":0,"nw":0,"imp":1,"rel":0.7727,"gm":22000.0,"why":""},{"i":224,"t":"ايفون 11 عادي","p":13000,"g":"11","v":"base","s":"valid","sto":null,"bat":null,"tax":null,"box":0,"nw":0,"imp":0,"rel":0.1818,"gm":11000.0,"why":""},{"i":225,"t":"IPHONE 17 PRO MAX  الاصدار الياباني","p":5600,"g":"17","v":"promax","s":"clone","sto":null,"bat":null,"tax":null,"box":0,"nw":0,"imp":0,"rel":null,"gm":null,"why":"نسخة كوبي أو إعلان دعائي بسعر وهمي"},{"i":226,"t":"ايفون 11بروو للببع او للتبديل بايفون اعلي","p":11500,"g":"11","v":"pro","s":"valid","sto":null,"bat":null,"tax":null,"box":0,"nw":0,"imp":0,"rel":-0.1154,"gm":13000.0,"why":""},{"i":227,"t":"ايفون 7بلس مساحه 256 جيجا بى 5500ج","p":5500,"g":"7","v":"plus","s":"valid","sto":256,"bat":null,"tax":null,"box":0,"nw":0,"imp":0,"rel":0.2222,"gm":4500.0,"why":""},{"i":228,"t":"iPhone 17 Pro – 256 GB","p":71000,"g":"17","v":"pro","s":"clone","sto":256,"bat":null,"tax":null,"box":0,"nw":0,"imp":0,"rel":null,"gm":null,"why":"نسخة كوبي أو إعلان دعائي بسعر وهمي"},{"i":229,"t":"ايفون 13 وارد الخارج لؤطه","p":25000,"g":"13","v":"base","s":"valid","sto":null,"bat":null,"tax":null,"box":0,"nw":0,"imp":1,"rel":0.087,"gm":23000.0,"why":""},{"i":230,"t":"ايفون 16 برو ماكس معفي ضريبه","p":41000,"g":"16","v":"promax","s":"valid","sto":null,"bat":null,"tax":"exempt","box":0,"nw":0,"imp":0,"rel":-0.3387,"gm":62000.0,"why":""},{"i":231,"t":"ايفون 11 عادي","p":13000,"g":"11","v":"base","s":"dup","sto":null,"bat":null,"tax":null,"box":0,"nw":0,"imp":0,"rel":null,"gm":null,"why":"إعلان مكرر"},{"i":232,"t":"آيفون 7 I Phone Plus","p":9000,"g":"7","v":"plus","s":"outlier","sto":null,"bat":null,"tax":null,"box":0,"nw":0,"imp":0,"rel":null,"gm":null,"why":"سعر بعيد جدًا عن سعر نفس الموديل"},{"i":233,"t":"ايفون ابل xr","p":7500,"g":"xr","v":"base","s":"valid","sto":null,"bat":null,"tax":null,"box":0,"nw":0,"imp":0,"rel":0.0,"gm":7500.0,"why":""},{"i":234,"t":"iPhone 17 Air","p":60000,"g":"17","v":"air","s":"clone","sto":null,"bat":null,"tax":null,"box":0,"nw":0,"imp":0,"rel":null,"gm":null,"why":"نسخة كوبي أو إعلان دعائي بسعر وهمي"},{"i":235,"t":"ايفون 16 برو ماكس","p":55000,"g":"16","v":"promax","s":"valid","sto":null,"bat":null,"tax":null,"box":0,"nw":0,"imp":0,"rel":-0.1129,"gm":62000.0,"why":""},{"i":236,"t":"للبيع او البدل ب ايفون vivo V70 5G","p":29000,"g":null,"v":"base","s":"other","sto":null,"bat":null,"tax":null,"box":0,"nw":0,"imp":0,"rel":null,"gm":null,"why":"إكسسوار / منتج مش آيفون"},{"i":237,"t":"ايفون 13  للبيع مساحه 128","p":30000,"g":"13","v":"base","s":"valid","sto":128,"bat":null,"tax":null,"box":0,"nw":0,"imp":0,"rel":0.3043,"gm":23000.0,"why":""},{"i":238,"t":"ايفون 13 برو ماكس","p":35000,"g":"13","v":"promax","s":"valid","sto":null,"bat":null,"tax":null,"box":0,"nw":0,"imp":0,"rel":0.0,"gm":35000.0,"why":""},{"i":239,"t":"آيفون 11 سعه 256 جيجا","p":9500,"g":"11","v":"base","s":"valid","sto":256,"bat":null,"tax":null,"box":0,"nw":0,"imp":0,"rel":-0.1364,"gm":11000.0,"why":""},{"i":240,"t":"ايفون 14 مفيهوش اي خدش معاه الكرتونه والشاحن و حاله البطاريه 78 %","p":25000,"g":"14","v":"base","s":"valid","sto":null,"bat":78,"tax":null,"box":1,"nw":0,"imp":0,"rel":0.1364,"gm":22000.0,"why":""},{"i":241,"t":"آيفون 15برو ماكس.    256.  خالص الضريبه","p":63000,"g":"15","v":"promax","s":"valid","sto":256,"bat":null,"tax":"exempt","box":0,"nw":0,"imp":0,"rel":0.26,"gm":50000.0,"why":""},{"i":242,"t":"*الجهاز آيفون برو ماكس 17*","p":2500,"g":"17","v":"promax","s":"clone","sto":null,"bat":null,"tax":null,"box":0,"nw":0,"imp":0,"rel":null,"gm":null,"why":"نسخة كوبي أو إعلان دعائي بسعر وهمي"},{"i":243,"t":"ايفون 13برو ماكس","p":35000,"g":"13","v":"promax","s":"valid","sto":null,"bat":null,"tax":null,"box":0,"nw":0,"imp":0,"rel":0.0,"gm":35000.0,"why":""},{"i":244,"t":"ايفون 16برو ماكس 256","p":65000,"g":"16","v":"promax","s":"valid","sto":256,"bat":null,"tax":null,"box":0,"nw":0,"imp":0,"rel":0.0484,"gm":62000.0,"why":""},{"i":245,"t":"آيفون 15، مساحة 256 جيجا، رام 6","p":30000,"g":"15","v":"base","s":"valid","sto":256,"bat":null,"tax":null,"box":0,"nw":0,"imp":0,"rel":-0.0625,"gm":32000.0,"why":""},{"i":246,"t":"ايفون 13برو ماكس لون ابيض","p":35000,"g":"13","v":"promax","s":"valid","sto":null,"bat":null,"tax":null,"box":0,"nw":0,"imp":0,"rel":0.0,"gm":35000.0,"why":""},{"i":247,"t":"Iphone 17 pro 256 orange new sealed + ضمان سنتين","p":82000,"g":"17","v":"pro","s":"clone","sto":256,"bat":null,"tax":null,"box":0,"nw":1,"imp":0,"rel":null,"gm":null,"why":"نسخة كوبي أو إعلان دعائي بسعر وهمي"},{"i":248,"t":"ايفون 13برو ماكس ضريبه مش مفتوح نموزج M  لون ابيض بطاريه 83 مساحه 1تيرابايت","p":35000,"g":"13","v":"promax","s":"valid","sto":1024,"bat":83,"tax":null,"box":0,"nw":0,"imp":0,"rel":0.0,"gm":35000.0,"why":""},{"i":249,"t":"ده مش موبايل... ده تحفة!  iPhone 17 Pro Max مفيش زيه... ومفيش وقت للتفكير!","p":5600,"g":"17","v":"promax","s":"clone","sto":null,"bat":null,"tax":null,"box":0,"nw":0,"imp":0,"rel":null,"gm":null,"why":"نسخة كوبي أو إعلان دعائي بسعر وهمي"},{"i":250,"t":"كفرات ايفون 16 برومكس","p":300,"g":"16","v":"promax","s":"other","sto":null,"bat":null,"tax":null,"box":0,"nw":0,"imp":0,"rel":null,"gm":null,"why":"إكسسوار / منتج مش آيفون"},{"i":251,"t":"ايفون 13 برو ماكس","p":39000,"g":"13","v":"promax","s":"valid","sto":null,"bat":null,"tax":null,"box":0,"nw":0,"imp":0,"rel":0.1143,"gm":35000.0,"why":""},{"i":252,"t":"ايفون 13برو ماكس للبيع","p":35000,"g":"13","v":"promax","s":"valid","sto":null,"bat":null,"tax":null,"box":0,"nw":0,"imp":0,"rel":0.0,"gm":35000.0,"why":""},{"i":253,"t":"ايفون 11 128جيجا","p":16000,"g":"11","v":"base","s":"valid","sto":128,"bat":null,"tax":null,"box":0,"nw":0,"imp":0,"rel":0.4545,"gm":11000.0,"why":""},{"i":254,"t":"كوفر أيفون","p":200,"g":null,"v":"base","s":"other","sto":null,"bat":null,"tax":null,"box":0,"nw":0,"imp":0,"rel":null,"gm":null,"why":"إكسسوار / منتج مش آيفون"},{"i":255,"t":"جراب آيفون 14 برو ماكس شفاف Iphone 14 Pro max clear case","p":50,"g":"14","v":"promax","s":"other","sto":null,"bat":null,"tax":null,"box":0,"nw":0,"imp":0,"rel":null,"gm":null,"why":"إكسسوار / منتج مش آيفون"},{"i":256,"t":"*متفكررش كتييرر وإلحق اشترررري ايفون 17 الجدييييد  *Iphhhhhone 17 Prrrromaaaxx","p":7000,"g":"17","v":"promax","s":"clone","sto":null,"bat":null,"tax":null,"box":0,"nw":1,"imp":0,"rel":null,"gm":null,"why":"نسخة كوبي أو إعلان دعائي بسعر وهمي"},{"i":257,"t":"ايفون 11برو","p":14000,"g":"11","v":"pro","s":"valid","sto":null,"bat":null,"tax":null,"box":0,"nw":0,"imp":0,"rel":0.0769,"gm":13000.0,"why":""},{"i":258,"t":"ايفون 15 بروماكس 256 بطاريه 95 وتربروف","p":53800,"g":"15","v":"promax","s":"valid","sto":256,"bat":95,"tax":null,"box":0,"nw":0,"imp":0,"rel":0.076,"gm":50000.0,"why":""},{"i":259,"t":"آيفون 15 عادي (iPhone 15)","p":26000,"g":"15","v":"base","s":"valid","sto":null,"bat":null,"tax":null,"box":0,"nw":0,"imp":0,"rel":-0.1875,"gm":32000.0,"why":""},{"i":260,"t":"جرابات ايفون 8بلس","p":600,"g":"8","v":"plus","s":"other","sto":null,"bat":null,"tax":null,"box":0,"nw":0,"imp":0,"rel":null,"gm":null,"why":"إكسسوار / منتج مش آيفون"},{"i":261,"t":"ايفون 11 عادي","p":5200,"g":"11","v":"base","s":"outlier","sto":null,"bat":null,"tax":null,"box":0,"nw":0,"imp":0,"rel":null,"gm":null,"why":"سعر بعيد جدًا عن سعر نفس الموديل"},{"i":262,"t":"ايفون 13 برو  مساحه 512 82% وتر بروف  مش مغير اي حاجه","p":22000,"g":"13","v":"pro","s":"valid","sto":512,"bat":82,"tax":null,"box":0,"nw":0,"imp":0,"rel":0.0,"gm":22000.0,"why":""},{"i":263,"t":"Apple iPhone 17 Pro Max - 256GB","p":90500,"g":"17","v":"promax","s":"clone","sto":256,"bat":null,"tax":null,"box":0,"nw":0,"imp":0,"rel":null,"gm":null,"why":"نسخة كوبي أو إعلان دعائي بسعر وهمي"},{"i":264,"t":"ايفون 11برو","p":12000,"g":"11","v":"pro","s":"valid","sto":null,"bat":null,"tax":null,"box":0,"nw":0,"imp":0,"rel":-0.0769,"gm":13000.0,"why":""},{"i":265,"t":"ايفون 13 عادي","p":15200,"g":"13","v":"base","s":"valid","sto":null,"bat":null,"tax":null,"box":0,"nw":0,"imp":0,"rel":-0.3391,"gm":23000.0,"why":""},{"i":266,"t":"تلفون ايفون 17 برا ماكس كوبي","p":6000,"g":"17","v":"promax","s":"clone","sto":null,"bat":null,"tax":null,"box":0,"nw":0,"imp":0,"rel":null,"gm":null,"why":"نسخة كوبي أو إعلان دعائي بسعر وهمي"},{"i":267,"t":"ايفون 13 برو ماكس بطارية 76 ٪ معفي ضريبة معاه علبته والفاتورة من تريد لاين مفهوش خربوش","p":35500,"g":"13","v":"promax","s":"valid","sto":null,"bat":76,"tax":"exempt","box":0,"nw":0,"imp":0,"rel":0.0143,"gm":35000.0,"why":""},{"i":268,"t":"ايفون 16 برو ماكس عليه ضرية","p":47000,"g":"16","v":"promax","s":"valid","sto":null,"bat":null,"tax":"due","box":0,"nw":0,"imp":0,"rel":-0.2419,"gm":62000.0,"why":""},{"i":269,"t":"ايفون اكس اس حاله ممتازه","p":6000,"g":"xs","v":"base","s":"valid","sto":null,"bat":null,"tax":null,"box":0,"nw":0,"imp":0,"rel":-0.4,"gm":10000.0,"why":""},{"i":270,"t":"iPhone 14 pro","p":41500,"g":"14","v":"pro","s":"valid","sto":null,"bat":null,"tax":null,"box":0,"nw":0,"imp":0,"rel":0.137,"gm":36499.5,"why":""},{"i":271,"t":"15pro ماكس","p":48,"g":"15","v":"promax","s":"badprice","sto":null,"bat":null,"tax":null,"box":0,"nw":0,"imp":0,"rel":null,"gm":null,"why":"السعر أقل من الحد المعقول للموديل"},{"i":272,"t":"للبيع iPhone 13 Pro Max – 128GB","p":37000,"g":"13","v":"promax","s":"valid","sto":128,"bat":null,"tax":null,"box":0,"nw":0,"imp":0,"rel":0.0571,"gm":35000.0,"why":""},{"i":273,"t":"iPhone 16 pro max 512 GB","p":68000,"g":"16","v":"promax","s":"valid","sto":512,"bat":null,"tax":null,"box":0,"nw":0,"imp":0,"rel":0.0968,"gm":62000.0,"why":""},{"i":274,"t":"11بروماكس مساحه 512","p":22000,"g":"11","v":"promax","s":"valid","sto":512,"bat":null,"tax":null,"box":0,"nw":0,"imp":0,"rel":0.6296,"gm":13500.0,"why":""},{"i":275,"t":"16 Pro Max 256GB حالة زيرووو","p":40000,"g":"16","v":"promax","s":"valid","sto":256,"bat":null,"tax":null,"box":0,"nw":1,"imp":0,"rel":-0.3548,"gm":62000.0,"why":""},{"i":276,"t":"Iphone 12 battery 75 storage 75","p":13500,"g":"12","v":"base","s":"valid","sto":null,"bat":null,"tax":null,"box":0,"nw":0,"imp":0,"rel":-0.0878,"gm":14800.0,"why":""},{"i":277,"t":"ايفوان 16 pro 256","p":55000,"g":"16","v":"pro","s":"valid","sto":256,"bat":null,"tax":null,"box":0,"nw":0,"imp":0,"rel":-0.0179,"gm":56000.0,"why":""},{"i":278,"t":"Iphone 16 Pro Max 256gb","p":60000,"g":"16","v":"promax","s":"valid","sto":256,"bat":null,"tax":null,"box":0,"nw":0,"imp":0,"rel":-0.0323,"gm":62000.0,"why":""},{"i":279,"t":"12 برو ماكس","p":17000,"g":"12","v":"promax","s":"valid","sto":null,"bat":null,"tax":null,"box":0,"nw":0,"imp":0,"rel":-0.0556,"gm":18000.0,"why":""},{"i":280,"t":"جهاز كسر كسر الزيرو ما فيهوش اي خربوش وما اتفتحش نهائي مساحه 256 بطاريه 78 ما فيهوش اي حاجه خالص","p":5500,"g":null,"v":"base","s":"unknown","sto":256,"bat":78,"tax":"exempt","box":0,"nw":1,"imp":0,"rel":null,"gm":null,"why":"الموديل مش واضح في العنوان"},{"i":281,"t":"فيه تفاوض بسيط Iphone 16 للبيع","p":42000,"g":"16","v":"base","s":"valid","sto":null,"bat":null,"tax":null,"box":0,"nw":0,"imp":0,"rel":-0.125,"gm":48000.0,"why":""},{"i":282,"t":"14 pro max","p":4,"g":"14","v":"promax","s":"badprice","sto":null,"bat":null,"tax":null,"box":0,"nw":0,"imp":0,"rel":null,"gm":null,"why":"السعر أقل من الحد المعقول للموديل"},{"i":283,"t":"iPhone 13 pink","p":27000,"g":"13","v":"base","s":"valid","sto":null,"bat":null,"tax":null,"box":0,"nw":0,"imp":0,"rel":0.1739,"gm":23000.0,"why":""},{"i":284,"t":"iphone 13 water proof","p":15500,"g":"13","v":"base","s":"valid","sto":null,"bat":null,"tax":null,"box":0,"nw":0,"imp":0,"rel":-0.3261,"gm":23000.0,"why":""},{"i":285,"t":"الكسر مش مأثر علي البصمه أو الشاشه نهاية","p":3000,"g":null,"v":"base","s":"unknown","sto":null,"bat":null,"tax":null,"box":0,"nw":0,"imp":0,"rel":null,"gm":null,"why":"الموديل مش واضح في العنوان"},{"i":286,"t":"للبيع iPhone 16 Pro Max – تيتانيوم طبيعي   256GB  حالة ممتازة","p":63000,"g":"16","v":"promax","s":"valid","sto":256,"bat":null,"tax":null,"box":0,"nw":0,"imp":0,"rel":0.0161,"gm":62000.0,"why":""},{"i":287,"t":"iPhone 13 Pro للبيع","p":19500,"g":"13","v":"pro","s":"valid","sto":null,"bat":null,"tax":null,"box":0,"nw":0,"imp":0,"rel":-0.1136,"gm":22000.0,"why":""},{"i":288,"t":"iphone 13 normal new waterproof sure waterproof","p":23500,"g":"13","v":"base","s":"valid","sto":null,"bat":null,"tax":null,"box":0,"nw":1,"imp":0,"rel":0.0217,"gm":23000.0,"why":""},{"i":289,"t":"IPhone 14 للبيع","p":60000,"g":"14","v":"base","s":"outlier","sto":null,"bat":null,"tax":null,"box":0,"nw":0,"imp":0,"rel":null,"gm":null,"why":"سعر بعيد جدًا عن سعر نفس الموديل"},{"i":290,"t":"IPHONE 13 PRO MAX 128 GB 77% Battery","p":32000,"g":"13","v":"promax","s":"valid","sto":128,"bat":77,"tax":null,"box":0,"nw":0,"imp":0,"rel":-0.0857,"gm":35000.0,"why":""},{"i":291,"t":"18 pro max","p":87500,"g":"18","v":"promax","s":"valid","sto":null,"bat":null,"tax":null,"box":0,"nw":0,"imp":0,"rel":-0.0789,"gm":95000.0,"why":""},{"i":292,"t":"16 برو ماكس","p":58000,"g":"16","v":"promax","s":"valid","sto":null,"bat":null,"tax":null,"box":0,"nw":0,"imp":0,"rel":-0.0645,"gm":62000.0,"why":""},{"i":293,"t":"13 pro max","p":23000,"g":"13","v":"promax","s":"valid","sto":null,"bat":null,"tax":null,"box":0,"nw":0,"imp":0,"rel":-0.3429,"gm":35000.0,"why":""},{"i":294,"t":"بحالةممتازه لايوجد به خدش واحد وبطاريه 79% ومعاه الشاحن الاصلي  مطلوب 35 الف","p":35000,"g":null,"v":"base","s":"unknown","sto":null,"bat":79,"tax":null,"box":0,"nw":0,"imp":0,"rel":null,"gm":null,"why":"الموديل مش واضح في العنوان"},{"i":295,"t":"28,000ج عليه ضريبه i phoned 17 pro max 256 /100%","p":52000,"g":"17","v":"promax","s":"valid","sto":256,"bat":100,"tax":"due","box":0,"nw":0,"imp":0,"rel":-0.2571,"gm":70000.0,"why":""},{"i":296,"t":"iPhone 15 Pro Max 256GB Natural Titanium – بطارية 83% – بالعلبة","p":51000,"g":"15","v":"promax","s":"valid","sto":256,"bat":83,"tax":null,"box":1,"nw":0,"imp":0,"rel":0.02,"gm":50000.0,"why":""},{"i":297,"t":"*للانااااقه عنوااان وفخااامته هتعجبك   الايفوووووون بروووووماكس    *IPHoooONE 17 PRoooOMA","p":7750,"g":"17","v":"promax","s":"clone","sto":null,"bat":null,"tax":null,"box":0,"nw":0,"imp":0,"rel":null,"gm":null,"why":"نسخة كوبي أو إعلان دعائي بسعر وهمي"},{"i":298,"t":"Iphone 13 للبيع","p":25600,"g":"13","v":"base","s":"valid","sto":null,"bat":null,"tax":null,"box":0,"nw":0,"imp":0,"rel":0.113,"gm":23000.0,"why":""},{"i":299,"t":"iPhone 16 pro max (used) in an excellent   condition for sale","p":58000,"g":"16","v":"promax","s":"valid","sto":null,"bat":null,"tax":null,"box":0,"nw":0,"imp":0,"rel":-0.0645,"gm":62000.0,"why":""},{"i":300,"t":"تليفون 13 برو بحالة نضيفة","p":21000,"g":"13","v":"pro","s":"valid","sto":null,"bat":null,"tax":null,"box":0,"nw":1,"imp":0,"rel":-0.0455,"gm":22000.0,"why":""},{"i":301,"t":"Iphone 16 pro","p":57000,"g":"16","v":"pro","s":"valid","sto":null,"bat":null,"tax":null,"box":0,"nw":0,"imp":0,"rel":0.0179,"gm":56000.0,"why":""},{"i":302,"t":"iPhone 12 pro Max","p":23000,"g":"12","v":"promax","s":"valid","sto":null,"bat":null,"tax":null,"box":0,"nw":0,"imp":0,"rel":0.2778,"gm":18000.0,"why":""},{"i":303,"t":"iPhone 13 bro max","p":30000,"g":"13","v":"promax","s":"valid","sto":null,"bat":null,"tax":null,"box":0,"nw":0,"imp":0,"rel":-0.1429,"gm":35000.0,"why":""},{"i":304,"t":"Iphone 14 pro max","p":40000,"g":"14","v":"promax","s":"valid","sto":null,"bat":null,"tax":null,"box":0,"nw":0,"imp":0,"rel":0.0526,"gm":38000.0,"why":""},{"i":305,"t":"Apple  iPhone 14 Pro Max  256GB For Sale Ram 6gb","p":46000,"g":"14","v":"promax","s":"valid","sto":256,"bat":null,"tax":null,"box":0,"nw":0,"imp":0,"rel":0.2105,"gm":38000.0,"why":""},{"i":306,"t":"iphone 16 pro max 1TB black","p":80000,"g":"16","v":"promax","s":"valid","sto":1024,"bat":null,"tax":null,"box":0,"nw":0,"imp":0,"rel":0.2903,"gm":62000.0,"why":""},{"i":307,"t":"I phone 17 Pro max","p":70000,"g":"17","v":"promax","s":"valid","sto":null,"bat":null,"tax":null,"box":0,"nw":0,"imp":0,"rel":0.0,"gm":70000.0,"why":""},{"i":308,"t":"عاديIphone 11","p":10000,"g":"11","v":"base","s":"valid","sto":null,"bat":null,"tax":null,"box":0,"nw":0,"imp":0,"rel":-0.0909,"gm":11000.0,"why":""},{"i":309,"t":"i phone 14 pro max","p":38000,"g":"14","v":"promax","s":"valid","sto":null,"bat":null,"tax":null,"box":0,"nw":0,"imp":0,"rel":0.0,"gm":38000.0,"why":""},{"i":310,"t":"iPhone 13.","p":23800,"g":"13","v":"base","s":"valid","sto":null,"bat":null,"tax":null,"box":0,"nw":0,"imp":0,"rel":0.0348,"gm":23000.0,"why":""},{"i":311,"t":"iPhone 15 pro 256g","p":43000,"g":"15","v":"pro","s":"valid","sto":256,"bat":null,"tax":null,"box":0,"nw":0,"imp":0,"rel":0.0118,"gm":42500.0,"why":""},{"i":312,"t":"iPhone 16 – 128GB  جديد تمامًا","p":51500,"g":"16","v":"base","s":"valid","sto":128,"bat":null,"tax":null,"box":0,"nw":1,"imp":0,"rel":0.0729,"gm":48000.0,"why":""},{"i":313,"t":"iPhone 16 Pro Max 256GB  Titanium","p":48000,"g":"16","v":"promax","s":"valid","sto":256,"bat":null,"tax":null,"box":0,"nw":0,"imp":0,"rel":-0.2258,"gm":62000.0,"why":""},{"i":314,"t":"16 pro max 256g 90٪ M معفي ضريبه  متاح تقسيط","p":60000,"g":"16","v":"promax","s":"valid","sto":256,"bat":90,"tax":"exempt","box":0,"nw":0,"imp":0,"rel":-0.0323,"gm":62000.0,"why":""},{"i":315,"t":"السعر87000","p":87000,"g":null,"v":"base","s":"unknown","sto":null,"bat":null,"tax":null,"box":0,"nw":0,"imp":0,"rel":null,"gm":null,"why":"الموديل مش واضح في العنوان"},{"i":316,"t":"ايفون11 مساحه128 بطاريه75","p":11000,"g":"11","v":"base","s":"valid","sto":128,"bat":75,"tax":null,"box":0,"nw":0,"imp":0,"rel":0.0,"gm":11000.0,"why":""},{"i":317,"t":"Iphone 13 128GB like brand new","p":19000,"g":"13","v":"base","s":"valid","sto":128,"bat":null,"tax":null,"box":0,"nw":1,"imp":0,"rel":-0.1739,"gm":23000.0,"why":""},{"i":318,"t":"iPhone11pro مساحه 128 معاه شاحن فقط  مش معاه كرتونه لانو استراد خارجي","p":2000,"g":"11","v":"pro","s":"badprice","sto":128,"bat":null,"tax":null,"box":0,"nw":0,"imp":1,"rel":null,"gm":null,"why":"السعر أقل من الحد المعقول للموديل"},{"i":319,"t":"خالص ضريبه نموذجm  128جيجا  بطاريه 100متغيره  وشاشه gx كل حاجه فيه تمام سماعات كاميرات تمام","p":2200,"g":null,"v":"base","s":"unknown","sto":128,"bat":100,"tax":"exempt","box":0,"nw":0,"imp":0,"rel":null,"gm":null,"why":"الموديل مش واضح في العنوان"},{"i":320,"t":"عروووووض مميزة لمدة ثلاث ايام فقط الحق .....العرض مش حيتكرر تاني Ipho0000ne prrrr0 mmmmaxx1","p":750,"g":null,"v":"base","s":"clone","sto":null,"bat":null,"tax":null,"box":0,"nw":0,"imp":0,"rel":null,"gm":null,"why":"نسخة كوبي أو إعلان دعائي بسعر وهمي"},{"i":321,"t":"iPhone 14 Pro Max 256gb  البطارية 86%","p":44000,"g":"14","v":"promax","s":"valid","sto":256,"bat":86,"tax":null,"box":0,"nw":0,"imp":0,"rel":0.1579,"gm":38000.0,"why":""},{"i":322,"t":"عروووووض مميزة لمدة ثلاث ايام فقط الحق .....العرض مش حيتكرر تانى Iphhhoneee prrrooo maaaxxx","p":1000,"g":null,"v":"promax","s":"clone","sto":null,"bat":null,"tax":null,"box":0,"nw":0,"imp":0,"rel":null,"gm":null,"why":"نسخة كوبي أو إعلان دعائي بسعر وهمي"},{"i":323,"t":"12برو جهاز بسم الله مشاء الله مش مغير اي حاجه ومفيش اي لقطه مع كرتون جهازه حالة ممتاز جدا","p":21000,"g":"12","v":"pro","s":"valid","sto":null,"bat":null,"tax":null,"box":1,"nw":1,"imp":0,"rel":0.0244,"gm":20500.0,"why":""},{"i":324,"t":"*عروووووض مميزة لمدة ثلاث ايام فقط الحق .....العرض مش حيتكرر تاني Iphhhoneee prrrooo maaaxxx","p":8600,"g":null,"v":"promax","s":"clone","sto":null,"bat":null,"tax":null,"box":0,"nw":0,"imp":0,"rel":null,"gm":null,"why":"نسخة كوبي أو إعلان دعائي بسعر وهمي"},{"i":325,"t":"iPhone 12 64gb used","p":14000,"g":"12","v":"base","s":"valid","sto":64,"bat":null,"tax":null,"box":0,"nw":0,"imp":0,"rel":-0.0541,"gm":14800.0,"why":""},{"i":326,"t":"iPhone 13 – 128GB  حالة ممتازة","p":18500,"g":"13","v":"base","s":"valid","sto":128,"bat":null,"tax":null,"box":0,"nw":0,"imp":0,"rel":-0.1957,"gm":23000.0,"why":""},{"i":327,"t":"iPhone 7 plus 128 GB 3 ram حاله ممتازة","p":2500,"g":"7","v":"plus","s":"valid","sto":128,"bat":null,"tax":null,"box":0,"nw":0,"imp":0,"rel":-0.4444,"gm":4500.0,"why":""},{"i":328,"t":"وايفون 17 كوبي بقى له ثلاث ايام استعمال","p":4500,"g":"17","v":"base","s":"clone","sto":null,"bat":null,"tax":null,"box":0,"nw":0,"imp":0,"rel":null,"gm":null,"why":"نسخة كوبي أو إعلان دعائي بسعر وهمي"},{"i":329,"t":"ايفون12 برو مساحه 256 استعمال خفيف","p":20000,"g":"12","v":"pro","s":"valid","sto":256,"bat":null,"tax":null,"box":0,"nw":0,"imp":0,"rel":-0.0244,"gm":20500.0,"why":""},{"i":330,"t":"*الاجهزة كتيره والانواع كتيره بس الايفون  17 برووووماكس نوووع خاااااص وفريد من نوعه  كوبي درجه اولي","p":7750,"g":"17","v":"promax","s":"clone","sto":null,"bat":null,"tax":null,"box":0,"nw":0,"imp":0,"rel":null,"gm":null,"why":"نسخة كوبي أو إعلان دعائي بسعر وهمي"},{"i":331,"t":"iphone 16 بطاريه 88 مساحه 128 كرتونه  معفي ضريبة  معملش اي صيانه قبل كده  مفهوش خدش","p":43000,"g":"16","v":"base","s":"valid","sto":128,"bat":88,"tax":"exempt","box":1,"nw":0,"imp":0,"rel":-0.1042,"gm":48000.0,"why":""},{"i":332,"t":"ايفور 13 برو 512 بطاريه 85 عليه ضريبه","p":24500,"g":"13","v":"pro","s":"valid","sto":512,"bat":85,"tax":"due","box":0,"nw":0,"imp":0,"rel":0.1136,"gm":22000.0,"why":""},{"i":333,"t":"*IPHoooONE 17 PRoooOMAX*","p":5000,"g":"17","v":"promax","s":"clone","sto":null,"bat":null,"tax":null,"box":0,"nw":0,"imp":0,"rel":null,"gm":null,"why":"نسخة كوبي أو إعلان دعائي بسعر وهمي"},{"i":334,"t":"iPhone 15 – زي الجديد","p":30500,"g":"15","v":"base","s":"valid","sto":null,"bat":null,"tax":null,"box":0,"nw":1,"imp":0,"rel":-0.0469,"gm":32000.0,"why":""},{"i":335,"t":"iphone 13 pro max","p":28000,"g":"13","v":"promax","s":"valid","sto":null,"bat":null,"tax":null,"box":0,"nw":0,"imp":0,"rel":-0.2,"gm":35000.0,"why":""},{"i":336,"t":"*موبايل غني عن التعريف  اقوي بطاريه اعلي كاميراعالايفووووووون17 برومااااكس   *Iphoneee","p":9500,"g":"17","v":"promax","s":"clone","sto":null,"bat":null,"tax":null,"box":0,"nw":0,"imp":0,"rel":null,"gm":null,"why":"نسخة كوبي أو إعلان دعائي بسعر وهمي"},{"i":337,"t":"*للانااااقه عنوااان وفخااامته هتعجبك   ا*IPHoooONE 17 PRoooOMA","p":7750,"g":"17","v":"pro","s":"clone","sto":null,"bat":null,"tax":null,"box":0,"nw":0,"imp":0,"rel":null,"gm":null,"why":"نسخة كوبي أو إعلان دعائي بسعر وهمي"},{"i":338,"t":"iPhone 12 128G (Blue)","p":16000,"g":"12","v":"base","s":"valid","sto":128,"bat":null,"tax":null,"box":0,"nw":0,"imp":0,"rel":0.0811,"gm":14800.0,"why":""},{"i":339,"t":"It’s sell now","p":85000,"g":null,"v":"base","s":"unknown","sto":null,"bat":null,"tax":null,"box":0,"nw":0,"imp":0,"rel":null,"gm":null,"why":"الموديل مش واضح في العنوان"},{"i":340,"t":"iPhone 16 Pro max","p":63000,"g":"16","v":"promax","s":"valid","sto":null,"bat":null,"tax":null,"box":0,"nw":0,"imp":0,"rel":0.0161,"gm":62000.0,"why":""},{"i":341,"t":"11pro max 256","p":16000,"g":"11","v":"promax","s":"valid","sto":256,"bat":null,"tax":null,"box":0,"nw":0,"imp":0,"rel":0.1852,"gm":13500.0,"why":""},{"i":342,"t":"*للانااااقه عنوااان وفخااامته هتعجبك   ا*IPHoooONE 17 PRoooOMA","p":7750,"g":"17","v":"pro","s":"clone","sto":null,"bat":null,"tax":null,"box":0,"nw":0,"imp":0,"rel":null,"gm":null,"why":"نسخة كوبي أو إعلان دعائي بسعر وهمي"},{"i":343,"t":"256g M معفي ضريبه كسر الزيرو","p":60000,"g":null,"v":"base","s":"unknown","sto":256,"bat":null,"tax":"exempt","box":0,"nw":1,"imp":0,"rel":null,"gm":null,"why":"الموديل مش واضح في العنوان"},{"i":344,"t":"I phone 17 pro max","p":50000,"g":"17","v":"promax","s":"valid","sto":null,"bat":null,"tax":null,"box":0,"nw":0,"imp":0,"rel":-0.2857,"gm":70000.0,"why":""},{"i":345,"t":"iPhone 11 للبيع","p":15000,"g":"11","v":"base","s":"valid","sto":null,"bat":null,"tax":null,"box":0,"nw":0,"imp":0,"rel":0.3636,"gm":11000.0,"why":""},{"i":346,"t":"مستعمل بحاله ممتازة iPhone 8","p":7550,"g":"8","v":"base","s":"valid","sto":null,"bat":null,"tax":null,"box":0,"nw":0,"imp":0,"rel":0.3363,"gm":5650.0,"why":""},{"i":347,"t":"iPhone 14 128GB أبيض","p":22000,"g":"14","v":"base","s":"valid","sto":128,"bat":null,"tax":null,"box":0,"nw":0,"imp":0,"rel":0.0,"gm":22000.0,"why":""},{"i":348,"t":"البطاريه 93","p":78,"g":null,"v":"base","s":"unknown","sto":null,"bat":93,"tax":null,"box":0,"nw":0,"imp":0,"rel":null,"gm":null,"why":"الموديل مش واضح في العنوان"},{"i":349,"t":"iPhone 11 pro max زيرور","p":18000,"g":"11","v":"promax","s":"valid","sto":null,"bat":null,"tax":null,"box":0,"nw":1,"imp":0,"rel":0.3333,"gm":13500.0,"why":""},{"i":350,"t":"iphone12برو","p":22000,"g":"12","v":"pro","s":"valid","sto":null,"bat":null,"tax":null,"box":0,"nw":0,"imp":0,"rel":0.0732,"gm":20500.0,"why":""},{"i":351,"t":"موبيل تيفون 17 بروماكس جديد من السعوديه غير مدفوع الضريبه مطلوب 65000","p":65000,"g":"17","v":"promax","s":"valid","sto":null,"bat":null,"tax":"due","box":0,"nw":1,"imp":1,"rel":-0.0714,"gm":70000.0,"why":""},{"i":352,"t":"*الشكل الفريد والمتميز وخصم فقططط 40٪٪ عالاايفووووون 17 برومااااااكس*  *Iphhhhhone 17 Proma","p":780,"g":"17","v":"promax","s":"clone","sto":null,"bat":null,"tax":null,"box":0,"nw":0,"imp":0,"rel":null,"gm":null,"why":"نسخة كوبي أو إعلان دعائي بسعر وهمي"},{"i":353,"t":"I phone 17 pro max","p":68000,"g":"17","v":"promax","s":"valid","sto":null,"bat":null,"tax":null,"box":0,"nw":0,"imp":0,"rel":-0.0286,"gm":70000.0,"why":""},{"i":354,"t":"iphone 13 normal new waterproof sure waterproof","p":23000,"g":"13","v":"base","s":"valid","sto":null,"bat":null,"tax":null,"box":0,"nw":1,"imp":0,"rel":0.0,"gm":23000.0,"why":""},{"i":355,"t":"*جبنااالك جهاز شيك وامكانياااات ولا اروووع والسعر علي قد الايد لاومش بس كده ده كماااااان في هداياااا","p":7000,"g":null,"v":"base","s":"unknown","sto":null,"bat":null,"tax":null,"box":0,"nw":0,"imp":0,"rel":null,"gm":null,"why":"الموديل مش واضح في العنوان"},{"i":356,"t":"128g M معفي ضريبه كسر الزيرو","p":25000,"g":null,"v":"base","s":"unknown","sto":128,"bat":null,"tax":"exempt","box":0,"nw":1,"imp":0,"rel":null,"gm":null,"why":"الموديل مش واضح في العنوان"},{"i":357,"t":"iPhone 15 Pro Max 256GB – أبيض – خالص الضريبة","p":54000,"g":"15","v":"promax","s":"valid","sto":256,"bat":null,"tax":"exempt","box":0,"nw":0,"imp":0,"rel":0.08,"gm":50000.0,"why":""},{"i":358,"t":"Iphone 16 pro Max","p":61499,"g":"16","v":"promax","s":"valid","sto":null,"bat":null,"tax":null,"box":0,"nw":0,"imp":0,"rel":-0.0081,"gm":62000.0,"why":""},{"i":359,"t":"iPhone 13 128GB للبيع – بطارية فوق 95%","p":19000,"g":"13","v":"base","s":"valid","sto":128,"bat":95,"tax":null,"box":0,"nw":0,"imp":0,"rel":-0.1739,"gm":23000.0,"why":""},{"i":360,"t":"iPhone 13 256GB للبيع – بطارية فوق 95%","p":25000,"g":"13","v":"base","s":"valid","sto":256,"bat":95,"tax":null,"box":0,"nw":0,"imp":0,"rel":0.087,"gm":23000.0,"why":""},{"i":361,"t":"iPhone 13 السعر 26,000","p":25000,"g":"13","v":"base","s":"valid","sto":null,"bat":null,"tax":null,"box":0,"nw":0,"imp":0,"rel":0.087,"gm":23000.0,"why":""},{"i":362,"t":"IPhone 13 Pro Max","p":37000,"g":"13","v":"promax","s":"valid","sto":null,"bat":null,"tax":null,"box":0,"nw":0,"imp":0,"rel":0.0571,"gm":35000.0,"why":""},{"i":363,"t":"15 برو للبدل ب 15 ماكس","p":42000,"g":"15","v":"pro","s":"valid","sto":null,"bat":null,"tax":null,"box":0,"nw":0,"imp":0,"rel":-0.0118,"gm":42500.0,"why":""},{"i":364,"t":"شغل تليفونات بسعر الجمله","p":17500,"g":null,"v":"base","s":"other","sto":null,"bat":null,"tax":null,"box":0,"nw":0,"imp":0,"rel":null,"gm":null,"why":"إكسسوار / منتج مش آيفون"},{"i":365,"t":"Iphone 12 pro max","p":18000,"g":"12","v":"promax","s":"valid","sto":null,"bat":null,"tax":null,"box":0,"nw":0,"imp":0,"rel":0.0,"gm":18000.0,"why":""},{"i":366,"t":"IPhone 12 128g","p":17500,"g":"12","v":"base","s":"valid","sto":128,"bat":null,"tax":null,"box":0,"nw":0,"imp":0,"rel":0.1824,"gm":14800.0,"why":""},{"i":367,"t":"عاديiPhone 15","p":31000,"g":"15","v":"base","s":"valid","sto":null,"bat":null,"tax":null,"box":0,"nw":0,"imp":0,"rel":-0.0312,"gm":32000.0,"why":""},{"i":368,"t":"*العرررض اللي كسر الدنيا وضماان عليه كمان عالايفووووووون 17 بروووووماكس  الجديد *IPH","p":7000,"g":"17","v":"promax","s":"clone","sto":null,"bat":null,"tax":null,"box":0,"nw":1,"imp":0,"rel":null,"gm":null,"why":"نسخة كوبي أو إعلان دعائي بسعر وهمي"},{"i":369,"t":"i phone 17 promax","p":20,"g":"17","v":"promax","s":"clone","sto":null,"bat":null,"tax":null,"box":0,"nw":0,"imp":0,"rel":null,"gm":null,"why":"نسخة كوبي أو إعلان دعائي بسعر وهمي"},{"i":370,"t":"ايفون11برو ماكس","p":13500,"g":"11","v":"promax","s":"valid","sto":null,"bat":null,"tax":null,"box":0,"nw":0,"imp":0,"rel":0.0,"gm":13500.0,"why":""},{"i":371,"t":"Iphone 13 pro  متغير بطاريه فقط 76  عليه ضريبه قديمة 11890  من غير كرتونة مش محتاج حاجة","p":22000,"g":"13","v":"pro","s":"valid","sto":null,"bat":null,"tax":"due","box":0,"nw":0,"imp":0,"rel":0.0,"gm":22000.0,"why":""},{"i":372,"t":"iPhone 13 عادى","p":19500,"g":"13","v":"base","s":"valid","sto":null,"bat":null,"tax":null,"box":0,"nw":0,"imp":0,"rel":-0.1522,"gm":23000.0,"why":""},{"i":373,"t":"16 بروماكس","p":65000,"g":"16","v":"promax","s":"valid","sto":null,"bat":null,"tax":null,"box":0,"nw":0,"imp":0,"rel":0.0484,"gm":62000.0,"why":""},{"i":374,"t":"العرررض اللي كسر الدنيا و ضماان عليه كمان عالايفووووووون 17 بروووووماكس  الجديد","p":5000,"g":"17","v":"promax","s":"clone","sto":null,"bat":null,"tax":null,"box":0,"nw":1,"imp":0,"rel":null,"gm":null,"why":"نسخة كوبي أو إعلان دعائي بسعر وهمي"},{"i":375,"t":"*جبنااالكو العررررض الاقتصاااءي* *جدا جدا المش* *حيتعوض تااااني ابدا*   iPhonne 17 prro maxx","p":7750,"g":"17","v":"promax","s":"clone","sto":null,"bat":null,"tax":null,"box":0,"nw":0,"imp":0,"rel":null,"gm":null,"why":"نسخة كوبي أو إعلان دعائي بسعر وهمي"},{"i":376,"t":"IPHONE11  لا يوجد به اى خدوش","p":11500,"g":"11","v":"base","s":"valid","sto":null,"bat":null,"tax":null,"box":0,"nw":0,"imp":0,"rel":0.0455,"gm":11000.0,"why":""},{"i":377,"t":"*جبنااالكو العررررض الاقتصاااءي* *جدا جدا المش* *حيتعوض تااااني ابدا*   *مستني ايه احجز قبل نفاااااذ","p":7750,"g":null,"v":"base","s":"clone","sto":null,"bat":null,"tax":null,"box":0,"nw":0,"imp":0,"rel":null,"gm":null,"why":"نسخة كوبي أو إعلان دعائي بسعر وهمي"},{"i":378,"t":"موبيل للبيع","p":10000,"g":null,"v":"base","s":"unknown","sto":null,"bat":null,"tax":null,"box":0,"nw":0,"imp":0,"rel":null,"gm":null,"why":"الموديل مش واضح في العنوان"},{"i":379,"t":"هاتف ريدمي 15 جديد نزلت من سعرو عشان محتاج فلوس ضروري","p":10000,"g":"15","v":"base","s":"other","sto":null,"bat":null,"tax":null,"box":0,"nw":1,"imp":0,"rel":null,"gm":null,"why":"إكسسوار / منتج مش آيفون"},{"i":380,"t":"iphone 13.","p":25000,"g":"13","v":"base","s":"valid","sto":null,"bat":null,"tax":null,"box":0,"nw":0,"imp":0,"rel":0.087,"gm":23000.0,"why":""},{"i":381,"t":"13 برو ماكس لقطه","p":20000,"g":"13","v":"promax","s":"valid","sto":null,"bat":null,"tax":null,"box":0,"nw":1,"imp":0,"rel":-0.4286,"gm":35000.0,"why":""},{"i":382,"t":"iPhone 6 Gold 16 Gb","p":1800,"g":"6","v":"base","s":"valid","sto":null,"bat":null,"tax":null,"box":0,"nw":0,"imp":0,"rel":0.0,"gm":1800.0,"why":""},{"i":383,"t":"*الفخامه والجودة عنوانا أحدث الإصدارات وبأقل سعر علشان نسعد ونفرح احلى ناااس*  *Iphooone 17 prrroo","p":5600,"g":"17","v":"pro","s":"clone","sto":null,"bat":null,"tax":null,"box":0,"nw":0,"imp":0,"rel":null,"gm":null,"why":"نسخة كوبي أو إعلان دعائي بسعر وهمي"},{"i":384,"t":"iPhone 13 عادى","p":22500,"g":"13","v":"base","s":"valid","sto":null,"bat":null,"tax":null,"box":0,"nw":0,"imp":0,"rel":-0.0217,"gm":23000.0,"why":""},{"i":385,"t":"iPhone 16 pro Max 256 بطارية 91% دورة الشحن: 334 اللون الأسود التيتانيوم  الجهاز زيرو بحالة الجديد","p":63000,"g":"16","v":"promax","s":"valid","sto":256,"bat":91,"tax":null,"box":0,"nw":1,"imp":0,"rel":0.0161,"gm":62000.0,"why":""},{"i":386,"t":"غير مفتوح جديد بطاريه مناسبه سعر مناسب جداً و لا يجد اي مصابات","p":4200,"g":null,"v":"base","s":"unknown","sto":null,"bat":null,"tax":null,"box":0,"nw":1,"imp":0,"rel":null,"gm":null,"why":"الموديل مش واضح في العنوان"},{"i":387,"t":"*موبايل غني عن التعريف  اقوي بطاريه اعلي كاميراعالايفووووووون17 برومااااكس *  *Iphoneee","p":8600,"g":"17","v":"promax","s":"clone","sto":null,"bat":null,"tax":null,"box":0,"nw":0,"imp":0,"rel":null,"gm":null,"why":"نسخة كوبي أو إعلان دعائي بسعر وهمي"},{"i":388,"t":"هاتف iPhone 15 للبيع","p":38000,"g":"15","v":"base","s":"valid","sto":null,"bat":null,"tax":null,"box":0,"nw":0,"imp":0,"rel":0.1875,"gm":32000.0,"why":""},{"i":389,"t":"*ركز كويس عالجمااال دا  الايفووووون 17 برومااااااكس مفيش زيه ومتدورش كتير  *Iphhhhhone 17 P","p":5000,"g":"17","v":"promax","s":"clone","sto":null,"bat":null,"tax":null,"box":0,"nw":0,"imp":0,"rel":null,"gm":null,"why":"نسخة كوبي أو إعلان دعائي بسعر وهمي"},{"i":390,"t":"*الابداع والتميز  التطور التكنولوجي فى جهاااااز مميزايفووووون 17 برومااااااكس *  *Iphhhhhone","p":7000,"g":"17","v":"promax","s":"clone","sto":null,"bat":null,"tax":null,"box":0,"nw":0,"imp":0,"rel":null,"gm":null,"why":"نسخة كوبي أو إعلان دعائي بسعر وهمي"},{"i":391,"t":"iphone 15 Pro Used - Excellent Condition","p":44000,"g":"15","v":"pro","s":"valid","sto":null,"bat":null,"tax":null,"box":0,"nw":0,"imp":0,"rel":0.0353,"gm":42500.0,"why":""},{"i":392,"t":"Iphone 16 العادي","p":49000,"g":"16","v":"base","s":"valid","sto":null,"bat":null,"tax":null,"box":0,"nw":0,"imp":0,"rel":0.0208,"gm":48000.0,"why":""},{"i":393,"t":"*رجعنالكم ب عررررض جديد وخطيييير عالايفون.17 بروماكس معشوووق الجمييع وشحن لجميع المحافظات *","p":8600,"g":null,"v":"promax","s":"clone","sto":null,"bat":null,"tax":null,"box":0,"nw":1,"imp":0,"rel":null,"gm":null,"why":"نسخة كوبي أو إعلان دعائي بسعر وهمي"},{"i":394,"t":"iPhone 16 pro desert titanium 256","p":59000,"g":"16","v":"pro","s":"valid","sto":256,"bat":null,"tax":null,"box":0,"nw":0,"imp":0,"rel":0.0536,"gm":56000.0,"why":""},{"i":395,"t":"*الشكل الفريد والمتميز وخصم فقططط 40٪٪ عالاايفووووون 17 برومااااااكس *  *Iphhhhhone 17 Proma","p":5600,"g":"17","v":"promax","s":"clone","sto":null,"bat":null,"tax":null,"box":0,"nw":0,"imp":0,"rel":null,"gm":null,"why":"نسخة كوبي أو إعلان دعائي بسعر وهمي"},{"i":396,"t":"*الشكل الفريد والمتميز وخصم فقططط 40٪عالاايفووووون 17 برومااااااكس   *Iphhhhhone 17 Proma","p":560,"g":"17","v":"promax","s":"clone","sto":null,"bat":null,"tax":null,"box":0,"nw":0,"imp":0,"rel":null,"gm":null,"why":"نسخة كوبي أو إعلان دعائي بسعر وهمي"},{"i":397,"t":"تكرار عرض لمده اسبوع حصريا   خصم  40٪ عالايفوووون 17 برووماكس كوبي درجه اولي بعد الاصلي اصدار ياباني","p":5000,"g":"17","v":"promax","s":"clone","sto":null,"bat":null,"tax":null,"box":0,"nw":0,"imp":0,"rel":null,"gm":null,"why":"نسخة كوبي أو إعلان دعائي بسعر وهمي"},{"i":398,"t":"11 عادي 64 بالعلبه لون ابيض معفي ضريبه  بطاريه 79 وتر بروف ضهره بس عاوز يتغير  مفيش خربوش في الجهاز","p":10000,"g":"11","v":"base","s":"valid","sto":64,"bat":79,"tax":"exempt","box":1,"nw":0,"imp":0,"rel":-0.0909,"gm":11000.0,"why":""},{"i":399,"t":"جهاز 17 برو 256 بطاريه 100  عددٍ الشحن مشحون 180 مره  بالعلبه معفي ضريبه كسر زيرو مفهوش خربوش","p":75000,"g":"17","v":"pro","s":"valid","sto":256,"bat":100,"tax":"exempt","box":1,"nw":1,"imp":0,"rel":0.0,"gm":75000.0,"why":""},{"i":400,"t":"iphone 6 قابل للتفاوض البسيط","p":750,"g":"6","v":"base","s":"badprice","sto":null,"bat":null,"tax":null,"box":0,"nw":0,"imp":0,"rel":null,"gm":null,"why":"السعر أقل من الحد المعقول للموديل"},{"i":401,"t":"iPhone 14 Pro 256GB Space Black – Tax Exempt – Box – Excellent Condition","p":39000,"g":"14","v":"pro","s":"valid","sto":256,"bat":null,"tax":"exempt","box":1,"nw":0,"imp":0,"rel":0.0685,"gm":36499.5,"why":""},{"i":402,"t":"Iphone 15  128GB","p":38000,"g":"15","v":"base","s":"valid","sto":128,"bat":null,"tax":null,"box":0,"nw":0,"imp":0,"rel":0.1875,"gm":32000.0,"why":""},{"i":403,"t":"مساحه 256 بطاريه 89 نموذج m ووتر بروف متفتحش  معاه الكرتونه والشاحن خالص الضريبه","p":23000,"g":null,"v":"base","s":"unknown","sto":256,"bat":89,"tax":"exempt","box":1,"nw":0,"imp":0,"rel":null,"gm":null,"why":"الموديل مش واضح في العنوان"},{"i":404,"t":"مساحه 256 بطاريه 89 نموذج m ووتر بروف متفتحش  معاه الكرتونه والشاحن خالص الضريبه","p":8500,"g":null,"v":"base","s":"unknown","sto":256,"bat":89,"tax":"exempt","box":1,"nw":0,"imp":0,"rel":null,"gm":null,"why":"الموديل مش واضح في العنوان"},{"i":405,"t":"*لعشاق التصويير الايفوووووون 17 برووووووماااااااكس الجدييييد دا ألحق الكميه صغيرررره   *Iphoooooone","p":5000,"g":"17","v":"promax","s":"clone","sto":null,"bat":null,"tax":null,"box":0,"nw":1,"imp":0,"rel":null,"gm":null,"why":"نسخة كوبي أو إعلان دعائي بسعر وهمي"},{"i":406,"t":"*لعشاق التصويير الايفوووووون 17 برووووووماااااااكس الجدييييد دا  ألحق الكميه صغيرررره   *Ip","p":500,"g":"17","v":"promax","s":"clone","sto":null,"bat":null,"tax":null,"box":0,"nw":1,"imp":0,"rel":null,"gm":null,"why":"نسخة كوبي أو إعلان دعائي بسعر وهمي"},{"i":407,"t":"*موبايل احلامك وصل وبأقل* *الاسعار*","p":1200,"g":null,"v":"base","s":"clone","sto":null,"bat":null,"tax":null,"box":0,"nw":0,"imp":0,"rel":null,"gm":null,"why":"نسخة كوبي أو إعلان دعائي بسعر وهمي"},{"i":408,"t":"*موبايل غني عن التعريف  اقوي بطاريه اعلي كاميراعالايفووووووون17 برومااااكس الياباني  *","p":700,"g":"17","v":"promax","s":"clone","sto":null,"bat":null,"tax":null,"box":0,"nw":0,"imp":0,"rel":null,"gm":null,"why":"نسخة كوبي أو إعلان دعائي بسعر وهمي"},{"i":409,"t":"*العررررض وووصل اللي كلنا مستنينه  عالايفووووووون 17 بروووووماكس  الجديد  *IPHoooONE 17 PRoooOMAX","p":600,"g":"17","v":"promax","s":"clone","sto":null,"bat":null,"tax":null,"box":0,"nw":1,"imp":0,"rel":null,"gm":null,"why":"نسخة كوبي أو إعلان دعائي بسعر وهمي"},{"i":410,"t":"Iphone 14 pro max","p":30000,"g":"14","v":"promax","s":"valid","sto":null,"bat":null,"tax":null,"box":0,"nw":0,"imp":0,"rel":-0.2105,"gm":38000.0,"why":""},{"i":411,"t":"Iphone 14 pro  مساحه 256  بطاريه 76 معاه البوكس مفيش فيه خربوش تلفوني الشخصي مدفوع ضريبه","p":35000,"g":"14","v":"pro","s":"valid","sto":256,"bat":76,"tax":"exempt","box":1,"nw":0,"imp":0,"rel":-0.0411,"gm":36499.5,"why":""},{"i":412,"t":"ابيض حاله ممتازه معفي iPhone 13","p":26800,"g":"13","v":"base","s":"valid","sto":null,"bat":null,"tax":"exempt","box":0,"nw":0,"imp":0,"rel":0.1652,"gm":23000.0,"why":""},{"i":413,"t":"ايفووونات كوبي وان","p":6000,"g":null,"v":"base","s":"clone","sto":null,"bat":null,"tax":null,"box":0,"nw":0,"imp":0,"rel":null,"gm":null,"why":"نسخة كوبي أو إعلان دعائي بسعر وهمي"},{"i":414,"t":"iPhone 16 pink","p":42000,"g":"16","v":"base","s":"valid","sto":null,"bat":null,"tax":null,"box":0,"nw":0,"imp":0,"rel":-0.125,"gm":48000.0,"why":""},{"i":415,"t":"*العرررض اللي كسر الدنيا وضماان عليه كمان عالايفووووووون 17 بروووووماكس  الجديد","p":500,"g":"17","v":"promax","s":"clone","sto":null,"bat":null,"tax":null,"box":0,"nw":1,"imp":0,"rel":null,"gm":null,"why":"نسخة كوبي أو إعلان دعائي بسعر وهمي"},{"i":416,"t":"*الدقه والتميز واقوى تكنولوجيا متقدمه مع احدث اصدارات الايفووووووون 17 بروووووماكس  الجديد","p":1500,"g":"17","v":"promax","s":"clone","sto":null,"bat":null,"tax":null,"box":0,"nw":1,"imp":0,"rel":null,"gm":null,"why":"نسخة كوبي أو إعلان دعائي بسعر وهمي"},{"i":417,"t":"iPhone 13 معاه العلبه بدون ضريبه مغير بطاريه وضهر","p":15500,"g":"13","v":"base","s":"valid","sto":null,"bat":null,"tax":null,"box":1,"nw":0,"imp":0,"rel":-0.3261,"gm":23000.0,"why":""},{"i":418,"t":"مساحه 256 بطاريه 84 نموذج m ووتر بروف متفتحش  معاه الكرتونه والشاحن خالص الضريبه","p":7500,"g":null,"v":"base","s":"unknown","sto":256,"bat":84,"tax":"exempt","box":1,"nw":0,"imp":0,"rel":null,"gm":null,"why":"الموديل مش واضح في العنوان"},{"i":419,"t":"مساحه 512 بطاريه 89 نموذج m ووتر بروف متفتحش  معاه الكرتونه والشاحن خالص الضريبه","p":28000,"g":null,"v":"base","s":"unknown","sto":512,"bat":89,"tax":"exempt","box":1,"nw":0,"imp":0,"rel":null,"gm":null,"why":"الموديل مش واضح في العنوان"},{"i":420,"t":"بطاريه 87 مساحه 256 معاه الكرتونه والشاحن وتر بروف  ضمان 6 شهور","p":11500,"g":null,"v":"base","s":"unknown","sto":256,"bat":87,"tax":null,"box":1,"nw":0,"imp":0,"rel":null,"gm":null,"why":"الموديل مش واضح في العنوان"},{"i":421,"t":"Iphone11 pro max","p":18000,"g":"11","v":"promax","s":"valid","sto":null,"bat":null,"tax":null,"box":0,"nw":0,"imp":0,"rel":0.3333,"gm":13500.0,"why":""},{"i":422,"t":"i phone 14 pro","p":32500,"g":"14","v":"pro","s":"valid","sto":null,"bat":null,"tax":null,"box":0,"nw":0,"imp":0,"rel":-0.1096,"gm":36499.5,"why":""},{"i":423,"t":"*معااانا اليوووم احسن عرررض لافضل جهاز والشحن لجميع المحافظات وايفووووون 17 برومااااااكس *I","p":5600,"g":"17","v":"promax","s":"clone","sto":null,"bat":null,"tax":null,"box":0,"nw":0,"imp":0,"rel":null,"gm":null,"why":"نسخة كوبي أو إعلان دعائي بسعر وهمي"},{"i":424,"t":"16 عادي 128 بطارية 100٪ 120 شحنة  الجهاز زيرو  مفهوش خربوش  زيرو ضريبة  معاه كل حاجه","p":50000,"g":"16","v":"base","s":"valid","sto":128,"bat":100,"tax":"exempt","box":0,"nw":1,"imp":0,"rel":0.0417,"gm":48000.0,"why":""},{"i":425,"t":"*العرررض اللي كسر الدنيا وضماان عليه كمان عالايفووووووون 17 بروووووماكس  الجديد *iPhonne 17 prro max","p":5000,"g":"17","v":"promax","s":"clone","sto":null,"bat":null,"tax":null,"box":0,"nw":1,"imp":0,"rel":null,"gm":null,"why":"نسخة كوبي أو إعلان دعائي بسعر وهمي"},{"i":426,"t":"*معااانا اليوووم احسن عرررض لافضل جهاز والشحن لجميع المحافظات وايفووووون 17 برومااااااكس *I","p":3500,"g":"17","v":"promax","s":"clone","sto":null,"bat":null,"tax":null,"box":0,"nw":0,"imp":0,"rel":null,"gm":null,"why":"نسخة كوبي أو إعلان دعائي بسعر وهمي"},{"i":427,"t":"iPhone 16 pro max 256 شريحتين","p":63000,"g":"16","v":"promax","s":"valid","sto":256,"bat":null,"tax":null,"box":0,"nw":0,"imp":0,"rel":0.0161,"gm":62000.0,"why":""},{"i":428,"t":"iPhone 11 Pro - حالة النادرة","p":14999,"g":"11","v":"pro","s":"valid","sto":null,"bat":null,"tax":null,"box":0,"nw":0,"imp":0,"rel":0.1538,"gm":13000.0,"why":""},{"i":429,"t":"ايفون15بروماكس مدفوع الضريبه شريحتين ذاكره 256 وبطاريه83 الجهاز نظيف جدا من الخدوش السعر 50 الف جنيه","p":50000,"g":"15","v":"promax","s":"valid","sto":256,"bat":83,"tax":"exempt","box":0,"nw":0,"imp":0,"rel":0.0,"gm":50000.0,"why":""},{"i":430,"t":"للبيع 17promaxفضي جديد للجادين","p":93000,"g":"17","v":"promax","s":"valid","sto":null,"bat":null,"tax":null,"box":0,"nw":1,"imp":0,"rel":0.3286,"gm":70000.0,"why":""},{"i":431,"t":"للبيع16000","p":16000,"g":null,"v":"base","s":"unknown","sto":null,"bat":null,"tax":null,"box":0,"nw":0,"imp":0,"rel":null,"gm":null,"why":"الموديل مش واضح في العنوان"},{"i":432,"t":"Iphone 16 promax","p":62000,"g":"16","v":"promax","s":"valid","sto":null,"bat":null,"tax":null,"box":0,"nw":0,"imp":0,"rel":0.0,"gm":62000.0,"why":""},{"i":433,"t":"18 برو ماكس 256 وراد السعوديه من الجرير  متبرشم علي ضريبه","p":98000,"g":"18","v":"promax","s":"valid","sto":256,"bat":null,"tax":null,"box":0,"nw":1,"imp":1,"rel":0.0316,"gm":95000.0,"why":""},{"i":434,"t":"ركز كويس عالجمااال دا الايفووووون 17 برومااااااكس مفيش زيه ومتدورش كتير  *Iphhhhhone 17pro max","p":5600,"g":"17","v":"promax","s":"clone","sto":null,"bat":null,"tax":null,"box":0,"nw":0,"imp":0,"rel":null,"gm":null,"why":"نسخة كوبي أو إعلان دعائي بسعر وهمي"},{"i":435,"t":"iPhone 12 Pro","p":18500,"g":"12","v":"pro","s":"valid","sto":null,"bat":null,"tax":null,"box":0,"nw":0,"imp":0,"rel":-0.0976,"gm":20500.0,"why":""},{"i":436,"t":"iPhone 16 Pro Max","p":60000,"g":"16","v":"promax","s":"valid","sto":null,"bat":null,"tax":null,"box":0,"nw":0,"imp":0,"rel":-0.0323,"gm":62000.0,"why":""},{"i":437,"t":"*جهااااز كل الاجيااال ووووصل وعليه عررض فقططط لاول 100 عميل ايفووووون 17 برومااااااكس   *Ip","p":5,"g":"17","v":"promax","s":"clone","sto":null,"bat":null,"tax":null,"box":0,"nw":0,"imp":0,"rel":null,"gm":null,"why":"نسخة كوبي أو إعلان دعائي بسعر وهمي"},{"i":438,"t":"Apple- iPhone 14 pro (256gb)","p":36999,"g":"14","v":"pro","s":"valid","sto":256,"bat":null,"tax":null,"box":0,"nw":0,"imp":0,"rel":0.0137,"gm":36499.5,"why":""},{"i":439,"t":"iphone 16 Pro","p":35000,"g":"16","v":"pro","s":"valid","sto":null,"bat":null,"tax":null,"box":0,"nw":0,"imp":0,"rel":-0.375,"gm":56000.0,"why":""},{"i":440,"t":"موبيل Iphone 12","p":16000,"g":"12","v":"base","s":"valid","sto":null,"bat":null,"tax":null,"box":0,"nw":0,"imp":0,"rel":0.0811,"gm":14800.0,"why":""},{"i":441,"t":"*الطلب عليه كتير اشتريه الان واستفيد بالخصم17 الايفوووون بروووماكس   *IPHoooONE 17 prrro maxxxx","p":8600,"g":"17","v":"promax","s":"clone","sto":null,"bat":null,"tax":null,"box":0,"nw":0,"imp":0,"rel":null,"gm":null,"why":"نسخة كوبي أو إعلان دعائي بسعر وهمي"},{"i":442,"t":"انا من باب الشعرية","p":9000,"g":null,"v":"base","s":"unknown","sto":null,"bat":null,"tax":null,"box":0,"nw":0,"imp":0,"rel":null,"gm":null,"why":"الموديل مش واضح في العنوان"},{"i":443,"t":"iPhone 16 plus  (معفي ضريبة ) Battery 95% Storage 128G معاه علبته و كل حاجته","p":49500,"g":"16","v":"plus","s":"valid","sto":128,"bat":95,"tax":"exempt","box":0,"nw":0,"imp":0,"rel":0.1061,"gm":44750.0,"why":""},{"i":444,"t":"iphone 15 pro  b 88","p":44000,"g":"15","v":"pro","s":"valid","sto":null,"bat":88,"tax":null,"box":0,"nw":0,"imp":0,"rel":0.0353,"gm":42500.0,"why":""},{"i":445,"t":"باب الشعرية","p":9000,"g":null,"v":"base","s":"unknown","sto":null,"bat":null,"tax":null,"box":0,"nw":0,"imp":0,"rel":null,"gm":null,"why":"الموديل مش واضح في العنوان"},{"i":446,"t":"باب الشعرية","p":3000,"g":null,"v":"base","s":"unknown","sto":null,"bat":null,"tax":null,"box":0,"nw":0,"imp":0,"rel":null,"gm":null,"why":"الموديل مش واضح في العنوان"},{"i":447,"t":"iPhone 12 Pro Pacific Blue Great Condition","p":20000,"g":"12","v":"pro","s":"valid","sto":null,"bat":null,"tax":null,"box":0,"nw":0,"imp":0,"rel":-0.0244,"gm":20500.0,"why":""},{"i":448,"t":"للبيع iPhone 16 Pro Max جديد لم يُستخدم  • السعة: 512GB • اللون: Desert Titanium • موديل الجهاز: A32","p":92000,"g":"16","v":"promax","s":"valid","sto":512,"bat":null,"tax":null,"box":0,"nw":1,"imp":0,"rel":0.4839,"gm":62000.0,"why":""},{"i":449,"t":"iPhone 16 pro max","p":65000,"g":"16","v":"promax","s":"valid","sto":null,"bat":null,"tax":null,"box":0,"nw":0,"imp":0,"rel":0.0484,"gm":62000.0,"why":""},{"i":450,"t":"Iphone17promax","p":55000,"g":"17","v":"promax","s":"clone","sto":null,"bat":null,"tax":null,"box":0,"nw":0,"imp":0,"rel":null,"gm":null,"why":"نسخة كوبي أو إعلان دعائي بسعر وهمي"},{"i":451,"t":"iPhone 11 Pro Max","p":15500,"g":"11","v":"promax","s":"valid","sto":null,"bat":null,"tax":null,"box":0,"nw":0,"imp":0,"rel":0.1481,"gm":13500.0,"why":""},{"i":452,"t":"Apple iPhone 15 128GB وارد الكويت كسر زيرو","p":35000,"g":"15","v":"base","s":"valid","sto":128,"bat":null,"tax":null,"box":0,"nw":1,"imp":1,"rel":0.0938,"gm":32000.0,"why":""},{"i":453,"t":"iPhone 12 Pro Max للبيع","p":23000,"g":"12","v":"promax","s":"valid","sto":null,"bat":null,"tax":null,"box":0,"nw":0,"imp":0,"rel":0.2778,"gm":18000.0,"why":""},{"i":454,"t":"iPhone 11 Pro Max","p":10000,"g":"11","v":"promax","s":"valid","sto":null,"bat":null,"tax":null,"box":0,"nw":0,"imp":0,"rel":-0.2593,"gm":13500.0,"why":""},{"i":455,"t":"الجهاز مغير تاتش بس","p":8800,"g":null,"v":"base","s":"unknown","sto":null,"bat":null,"tax":null,"box":0,"nw":0,"imp":0,"rel":null,"gm":null,"why":"الموديل مش واضح في العنوان"},{"i":456,"t":"للبيع   iPhone 6 s Plus   32 GB   حالة نضيفة جدًا  بطارية 100%  بدون خدوش  بالكرتونة + شاحن ورأس 33W","p":3500,"g":"6","v":"plus","s":"valid","sto":null,"bat":100,"tax":null,"box":1,"nw":1,"imp":0,"rel":0.0,"gm":3500.0,"why":""},{"i":457,"t":"10Iphone 15 كسر زيرو","p":32000,"g":"15","v":"base","s":"valid","sto":null,"bat":null,"tax":null,"box":0,"nw":1,"imp":0,"rel":0.0,"gm":32000.0,"why":""},{"i":458,"t":"iPhone 13 (regular) Apple iPhone 13 (white) Waterproof It's in good condition. Very lightly used. ..","p":25000,"g":"13","v":"base","s":"valid","sto":null,"bat":null,"tax":null,"box":0,"nw":0,"imp":0,"rel":0.087,"gm":23000.0,"why":""},{"i":459,"t":"محتاج تلفون Xs يكون تقسيط بمقدم لو متاح ابعت صور","p":10000,"g":"xs","v":"base","s":"valid","sto":null,"bat":null,"tax":null,"box":0,"nw":0,"imp":0,"rel":0.0,"gm":10000.0,"why":""},{"i":460,"t":"IPhone 14 Pro 256gb  Battery 78%  Used like new  بدون اي خدوش او كسور او تغيير  بدون بوكس","p":37000,"g":"14","v":"pro","s":"valid","sto":256,"bat":78,"tax":null,"box":0,"nw":1,"imp":0,"rel":0.0137,"gm":36499.5,"why":""},{"i":461,"t":"IPhone 11 Pro Max 64GB","p":13500,"g":"11","v":"promax","s":"valid","sto":64,"bat":null,"tax":null,"box":0,"nw":0,"imp":0,"rel":0.0,"gm":13500.0,"why":""},{"i":462,"t":"الجهاز مفهوش الهواء وتر بروف","p":38800,"g":null,"v":"base","s":"unknown","sto":null,"bat":null,"tax":null,"box":0,"nw":0,"imp":0,"rel":null,"gm":null,"why":"الموديل مش واضح في العنوان"},{"i":463,"t":"iPhone 13 Pro Max","p":31000,"g":"13","v":"promax","s":"valid","sto":null,"bat":null,"tax":null,"box":0,"nw":0,"imp":0,"rel":-0.1143,"gm":35000.0,"why":""},{"i":464,"t":"*جبنااالكو العررررض الاقتصاااءي* *جدا جدا المش* *حيتعوض تااااني ابدا*   *مستني ايه احجز قبل نفاااااذ","p":8600,"g":null,"v":"base","s":"clone","sto":null,"bat":null,"tax":null,"box":0,"nw":0,"imp":0,"rel":null,"gm":null,"why":"نسخة كوبي أو إعلان دعائي بسعر وهمي"},{"i":465,"t":"*جبنااالكو العررررض الاقتصاااءي* *جدا جدا المش* *حيتعوض تااااني ابدا*   *مستني ايه احجز قبل نفاااااذ","p":999,"g":null,"v":"base","s":"clone","sto":null,"bat":null,"tax":null,"box":0,"nw":0,"imp":0,"rel":null,"gm":null,"why":"نسخة كوبي أو إعلان دعائي بسعر وهمي"},{"i":466,"t":"ابل 16 برو مساحه 128 جيجا بحاله الزيرو مع البوكس","p":58000,"g":"16","v":"pro","s":"valid","sto":128,"bat":null,"tax":null,"box":1,"nw":1,"imp":0,"rel":0.0357,"gm":56000.0,"why":""},{"i":467,"t":"*جبنااالكو العررررض الاقتصاااءي* *جدا جدا المش* *حيتعوض تااااني ابدا*   *مستني ايه احجز قبل نفاااااذ","p":999,"g":null,"v":"base","s":"clone","sto":null,"bat":null,"tax":null,"box":0,"nw":0,"imp":0,"rel":null,"gm":null,"why":"نسخة كوبي أو إعلان دعائي بسعر وهمي"},{"i":468,"t":"Iphone  13","p":27500,"g":"13","v":"base","s":"valid","sto":null,"bat":null,"tax":null,"box":0,"nw":0,"imp":0,"rel":0.1957,"gm":23000.0,"why":""},{"i":469,"t":"*العرررض اللي كسر الدنيا وضماان عليه كمان عالايفووووووون 17 بروووووماكس  الجديد  *IPH","p":560,"g":"17","v":"promax","s":"clone","sto":null,"bat":null,"tax":null,"box":0,"nw":1,"imp":0,"rel":null,"gm":null,"why":"نسخة كوبي أو إعلان دعائي بسعر وهمي"},{"i":470,"t":"iphone 14 pro max","p":42000,"g":"14","v":"promax","s":"valid","sto":null,"bat":null,"tax":null,"box":0,"nw":0,"imp":0,"rel":0.1053,"gm":38000.0,"why":""},{"i":471,"t":"17 pro max","p":1234,"g":"17","v":"promax","s":"clone","sto":null,"bat":null,"tax":null,"box":0,"nw":0,"imp":0,"rel":null,"gm":null,"why":"نسخة كوبي أو إعلان دعائي بسعر وهمي"},{"i":472,"t":"IPone 17 pro max","p":61500,"g":"17","v":"promax","s":"valid","sto":null,"bat":null,"tax":null,"box":0,"nw":0,"imp":0,"rel":-0.1214,"gm":70000.0,"why":""},{"i":473,"t":"العرض بتاعنا النهارده بجد تحفه ميتفوتش  اقوى الإمكانيات ايففففففففون 17 الجدييييد *  *Iphhhhhh","p":8600,"g":"17","v":"base","s":"clone","sto":null,"bat":null,"tax":null,"box":0,"nw":1,"imp":0,"rel":null,"gm":null,"why":"نسخة كوبي أو إعلان دعائي بسعر وهمي"},{"i":474,"t":"Iphone 7 plus للبيع","p":4500,"g":"7","v":"plus","s":"valid","sto":null,"bat":null,"tax":null,"box":0,"nw":0,"imp":0,"rel":0.0,"gm":4500.0,"why":""},{"i":475,"t":"i phone xr 128 نظيف لم يتعرض لصيانه","p":10000,"g":"xr","v":"base","s":"valid","sto":128,"bat":null,"tax":null,"box":0,"nw":0,"imp":0,"rel":0.3333,"gm":7500.0,"why":""},{"i":476,"t":"16 pro max","p":61500,"g":"16","v":"promax","s":"valid","sto":null,"bat":null,"tax":null,"box":0,"nw":0,"imp":0,"rel":-0.0081,"gm":62000.0,"why":""},{"i":477,"t":"iphone 12 pro max gold","p":27000,"g":"12","v":"promax","s":"valid","sto":null,"bat":null,"tax":null,"box":0,"nw":0,"imp":0,"rel":0.5,"gm":18000.0,"why":""},{"i":478,"t":"مش مغير حاجه بطاريه 99 معاه الكرتونه عليه ضريبه 13000الف فقط السعر 28000الف","p":28000,"g":null,"v":"base","s":"unknown","sto":null,"bat":99,"tax":"due","box":1,"nw":0,"imp":0,"rel":null,"gm":null,"why":"الموديل مش واضح في العنوان"},{"i":479,"t":"17 الايفوووووون بروووووماكس  *  *IPHoooONE 17","p":8600,"g":"17","v":"promax","s":"clone","sto":null,"bat":null,"tax":null,"box":0,"nw":0,"imp":0,"rel":null,"gm":null,"why":"نسخة كوبي أو إعلان دعائي بسعر وهمي"},{"i":480,"t":"المساحه: 256 البطارية: 86 نموزج: m معفي ضريبه","p":12999,"g":null,"v":"base","s":"unknown","sto":256,"bat":86,"tax":"exempt","box":0,"nw":0,"imp":0,"rel":null,"gm":null,"why":"الموديل مش واضح في العنوان"},{"i":481,"t":"iphone 16 pro max","p":66000,"g":"16","v":"promax","s":"valid","sto":null,"bat":null,"tax":null,"box":0,"nw":0,"imp":0,"rel":0.0645,"gm":62000.0,"why":""},{"i":482,"t":"Iphone 14 pro max","p":40000,"g":"14","v":"promax","s":"dup","sto":null,"bat":null,"tax":null,"box":0,"nw":0,"imp":0,"rel":null,"gm":null,"why":"إعلان مكرر"},{"i":483,"t":"Iphhhh0one pppprrrooo  mmmmax 17","p":7750,"g":"17","v":"promax","s":"clone","sto":null,"bat":null,"tax":null,"box":0,"nw":0,"imp":0,"rel":null,"gm":null,"why":"نسخة كوبي أو إعلان دعائي بسعر وهمي"},{"i":484,"t":"*جبنااالكو العررررض الاقتصاااءي* *جدا جدا المش* *حيتعوض تااااني ابدا*   *مستني ايه احجز قبل نفاااااذ","p":7750,"g":null,"v":"base","s":"clone","sto":null,"bat":null,"tax":null,"box":0,"nw":0,"imp":0,"rel":null,"gm":null,"why":"نسخة كوبي أو إعلان دعائي بسعر وهمي"},{"i":485,"t":"*عروووووض مميزة لمدة ثلاث ايام فقط الحق .....العرض مش حيتكرر تانى* * *Ipho0000ne prrrr0 mmmmaxx1","p":8600,"g":null,"v":"base","s":"clone","sto":null,"bat":null,"tax":null,"box":0,"nw":0,"imp":0,"rel":null,"gm":null,"why":"نسخة كوبي أو إعلان دعائي بسعر وهمي"},{"i":486,"t":"12 pro max  بطاريه 60  مساحه 256  معاه كرتونه  Face iD شغال  مغير ic شحن 19000","p":19000,"g":"12","v":"promax","s":"valid","sto":256,"bat":60,"tax":null,"box":1,"nw":0,"imp":0,"rel":0.0556,"gm":18000.0,"why":""},{"i":487,"t":"ايفون15 برو ماكس","p":45000,"g":"15","v":"promax","s":"valid","sto":null,"bat":null,"tax":null,"box":0,"nw":0,"imp":0,"rel":-0.1,"gm":50000.0,"why":""},{"i":488,"t":"للبيع iPhone 11 Pro Max 256GB","p":16500,"g":"11","v":"promax","s":"valid","sto":256,"bat":null,"tax":null,"box":0,"nw":0,"imp":0,"rel":0.2222,"gm":13500.0,"why":""},{"i":489,"t":"Iphone 16 pro max","p":64000,"g":"16","v":"promax","s":"valid","sto":null,"bat":null,"tax":null,"box":0,"nw":0,"imp":0,"rel":0.0323,"gm":62000.0,"why":""},{"i":490,"t":"I phon 15 pro max   256g","p":44000,"g":"15","v":"promax","s":"valid","sto":256,"bat":null,"tax":null,"box":0,"nw":0,"imp":0,"rel":-0.12,"gm":50000.0,"why":""},{"i":491,"t":"من غير كرتونه","p":20,"g":null,"v":"base","s":"unknown","sto":null,"bat":null,"tax":null,"box":0,"nw":0,"imp":0,"rel":null,"gm":null,"why":"الموديل مش واضح في العنوان"},{"i":492,"t":"iPhone 14 Pro Max 256G  معدل ل 17ماكس","p":44000,"g":"14","v":"promax","s":"valid","sto":256,"bat":null,"tax":null,"box":0,"nw":0,"imp":0,"rel":0.1579,"gm":38000.0,"why":""},{"i":493,"t":"Iphone 14 plus","p":30000,"g":"14","v":"plus","s":"valid","sto":null,"bat":null,"tax":null,"box":0,"nw":0,"imp":0,"rel":-0.0769,"gm":32500.0,"why":""},{"i":494,"t":"11 برومكسس","p":11500,"g":"11","v":"promax","s":"valid","sto":null,"bat":null,"tax":null,"box":0,"nw":0,"imp":0,"rel":-0.1481,"gm":13500.0,"why":""},{"i":495,"t":"11 برو ماكس مساحة 512 زيرو","p":21000,"g":"11","v":"promax","s":"valid","sto":512,"bat":null,"tax":null,"box":0,"nw":1,"imp":0,"rel":0.5556,"gm":13500.0,"why":""},{"i":496,"t":"14 pro max for sale","p":39500,"g":"14","v":"promax","s":"valid","sto":null,"bat":null,"tax":null,"box":0,"nw":0,"imp":0,"rel":0.0395,"gm":38000.0,"why":""},{"i":497,"t":"Apple iPhone 11","p":12000,"g":"11","v":"base","s":"valid","sto":null,"bat":null,"tax":null,"box":0,"nw":0,"imp":0,"rel":0.0909,"gm":11000.0,"why":""},{"i":498,"t":"Iphone 15 pro","p":46000,"g":"15","v":"pro","s":"valid","sto":null,"bat":null,"tax":null,"box":0,"nw":0,"imp":0,"rel":0.0824,"gm":42500.0,"why":""},{"i":499,"t":"للبرندات والتوكيلات محل تجارى 36م2 بأقوى لوكيشن تجارى متميز جدآ بالمربع الذهبى على ش مصطفى النحاس","p":75000,"g":null,"v":"base","s":"other","sto":null,"bat":null,"tax":null,"box":0,"nw":0,"imp":0,"rel":null,"gm":null,"why":"إكسسوار / منتج مش آيفون"},{"i":500,"t":"كامير سوني Zv e10","p":37000,"g":null,"v":"base","s":"other","sto":null,"bat":null,"tax":null,"box":0,"nw":0,"imp":0,"rel":null,"gm":null,"why":"إكسسوار / منتج مش آيفون"},{"i":501,"t":"10000 mAh ,JR-PBF12 LED Power Bank – 12 W USB‐C Pd & Dual 2.4 A USB‐A Outputs, Led Battery Display,","p":440,"g":"12","v":"base","s":"other","sto":null,"bat":null,"tax":null,"box":0,"nw":0,"imp":0,"rel":null,"gm":null,"why":"إكسسوار / منتج مش آيفون"},{"i":502,"t":"كابل شحن سريع 3 في1بقدرة 65واط – Lightning وType-CوMicro USB بطول15سم  شحن مجاني والدفع عندالاستلام","p":505,"g":"15","v":"base","s":"other","sto":null,"bat":null,"tax":null,"box":0,"nw":0,"imp":0,"rel":null,"gm":null,"why":"إكسسوار / منتج مش آيفون"},{"i":503,"t":"طباعتك الصغيرة والسحرية! طابعة Mini Sticker Printer ( متوافقة مع أجهزة : الأندرويد و الأيفون  )","p":1032,"g":null,"v":"mini","s":"other","sto":null,"bat":null,"tax":null,"box":0,"nw":0,"imp":0,"rel":null,"gm":null,"why":"إكسسوار / منتج مش آيفون"},{"i":504,"t":"Plokama - Microphone - Wireless Lavalier - Clip-On - Plug-and-Play - 2 Transmitters Type-C +1 Receiv","p":440,"g":null,"v":"base","s":"other","sto":null,"bat":null,"tax":null,"box":0,"nw":0,"imp":0,"rel":null,"gm":null,"why":"إكسسوار / منتج مش آيفون"},{"i":505,"t":"فلاشات ميموري 2 تيرا بايت 2000 جيجابايت  2000 جيجابايت تركيب علي أي جهاز موبيل فون  مزود بمدخل USB C","p":2800,"g":null,"v":"base","s":"other","sto":null,"bat":null,"tax":null,"box":0,"nw":0,"imp":0,"rel":null,"gm":null,"why":"إكسسوار / منتج مش آيفون"},{"i":506,"t":"أقوي سماعة بلوتوث توصيل الصوت عن طريق العظام كرياتين نيتروتك واي بروتين سيارة موتسيكل سكرتيرة عقارات","p":2800,"g":null,"v":"pro","s":"other","sto":null,"bat":null,"tax":null,"box":0,"nw":0,"imp":0,"rel":null,"gm":null,"why":"إكسسوار / منتج مش آيفون"},{"i":507,"t":"Harman Kardon SoundSticks Wireless Speaker System - Factory Sealed","p":11000,"g":null,"v":"base","s":"other","sto":null,"bat":null,"tax":null,"box":0,"nw":1,"imp":0,"rel":null,"gm":null,"why":"إكسسوار / منتج مش آيفون"},{"i":508,"t":"جهاز REDMI 15 مساحه 265 جيجا RAM بطاريه 7000m جهاز استعمال 6 شهور ولسه عليه ضمان سنه وبالكرتونه وبال","p":9100,"g":"15","v":"base","s":"other","sto":null,"bat":null,"tax":null,"box":1,"nw":0,"imp":0,"rel":null,"gm":null,"why":"إكسسوار / منتج مش آيفون"},{"i":509,"t":"ايربودز برو2","p":600,"g":null,"v":"pro","s":"other","sto":null,"bat":null,"tax":null,"box":0,"nw":0,"imp":0,"rel":null,"gm":null,"why":"إكسسوار / منتج مش آيفون"},{"i":510,"t":"Samsung A57 5G 256GB / 12GB RAM — كسر زيرو","p":29500,"g":"12","v":"base","s":"other","sto":256,"bat":null,"tax":null,"box":0,"nw":1,"imp":0,"rel":null,"gm":null,"why":"إكسسوار / منتج مش آيفون"},{"i":511,"t":"ساعة Infinix XWatch N4 Pro  إنفينكس","p":2200,"g":null,"v":"pro","s":"other","sto":null,"bat":null,"tax":null,"box":0,"nw":0,"imp":0,"rel":null,"gm":null,"why":"إكسسوار / منتج مش آيفون"},{"i":512,"t":"OPPO RENO 15 5G","p":20000,"g":"15","v":"base","s":"valid","sto":null,"bat":null,"tax":null,"box":0,"nw":0,"imp":0,"rel":-0.375,"gm":32000.0,"why":""}];
+
+  var NS = 'http://www.w3.org/2000/svg';
+  function $(s, r) { return (r || document).querySelector(s); }
+  function S(tag, attrs, parent) {
+    var e = document.createElementNS(NS, tag);
+    for (var k in attrs) e.setAttribute(k, attrs[k]);
+    if (parent) parent.appendChild(e);
+    return e;
+  }
+  function T(tag, cls, text, parent) {
+    var e = document.createElement(tag);
+    if (cls) e.className = cls;
+    if (text != null) e.textContent = text;
+    if (parent) parent.appendChild(e);
+    return e;
+  }
+  function fmt(n) { return Math.round(n).toLocaleString('en-US'); }
+  function fmtK(n) {
+    if (n >= 1000) return (Math.round(n / 100) / 10).toString().replace(/\.0$/, '') + 'K';
+    return String(Math.round(n));
+  }
+  function pct(x) {
+    var r = Math.round(x * 100);
+    return '‎' + (r > 0 ? '+' : r < 0 ? '−' : '') + Math.abs(r) + '%‎';
+  }
+  function quant(a, p) {
+    if (!a.length) return null;
+    var i = (a.length - 1) * p, lo = Math.floor(i), hi = Math.ceil(i);
+    return a[lo] + (a[hi] - a[lo]) * (i - lo);
+  }
+  function nz(s) {
+    return String(s).toLowerCase().replace(/[ً-ْـ]/g, '').replace(/[أإآ]/g, 'ا').replace(/ة/g, 'ه').replace(/ى/g, 'ي');
+  }
+
+  var GENS = ['18', '17', '16', '15', '14', '13', '12', '11', 'xr', 'xs', 'x', '8', '7', '6s', '6'];
+  var OLD = ['xr', 'xs', 'x', '8', '7', '6s', '6'];
+  var GEN_LABEL = { '18': 'آيفون 18', '17': 'آيفون 17', '16': 'آيفون 16', '15': 'آيفون 15', '14': 'آيفون 14', '13': 'آيفون 13', '12': 'آيفون 12', '11': 'آيفون 11', 'xr': 'آيفون XR', 'xs': 'آيفون XS', 'x': 'آيفون X', '8': 'آيفون 8', '7': 'آيفون 7', '6s': 'آيفون 6s', '6': 'آيفون 6' };
+  var VAR_LABEL = { base: '', mini: 'Mini', plus: 'Plus', air: 'Air', e: 'e', pro: 'Pro', promax: 'Pro Max' };
+  var VORD = { base: 0, mini: 1, plus: 2, air: 3, e: 4, pro: 5, promax: 6 };
+  var GORD = {};
+  GENS.forEach(function (g, i) { GORD[g] = GENS.length - i; });
+  var STAT = {
+    valid: ['صالح', 's1'], clone: ['كوبي أو دعائي', 's2'], other: ['مش آيفون', 's3'], unknown: ['موديل غير واضح', 's3'],
+    badprice: ['سعر غير منطقي', 's3'], outlier: ['سعر بعيد عن السوق', 's3'], dup: ['مكرر', 's3']
+  };
+  var STORD = { valid: 0, clone: 1, outlier: 2, badprice: 3, dup: 4, unknown: 5, other: 6 };
+
+  function modelName(r) {
+    if (!r.g) return 'غير محدد';
+    if (r.g === '16' && r.v === 'e') return 'آيفون 16e';
+    var v = VAR_LABEL[r.v] || '';
+    if (r.g === 'xs' && r.v === 'promax') v = 'Max';
+    return GEN_LABEL[r.g] + (v ? ' ' + v : '');
+  }
+
+  DATA.forEach(function (r) { r._n = nz(r.t); });
+  var VALID = DATA.filter(function (r) { return r.s === 'valid'; });
+  var MARKET_MED = quant(VALID.map(function (r) { return r.p; }).sort(function (a, b) { return a - b; }), 0.5);
+
+  /* ---------- state ---------- */
+  var state = { gens: new Set(), vars: new Set(), sto: new Set(), q: '', showAll: false, sort: { k: 'p', d: -1 }, page: 0 };
+  var PAGE = 12;
+
+  var GEN_CHIPS = [
+    { l: '18', k: ['18'] }, { l: '17', k: ['17'] }, { l: '16', k: ['16'] }, { l: '15', k: ['15'] }, { l: '14', k: ['14'] },
+    { l: '13', k: ['13'] }, { l: '12', k: ['12'] }, { l: '11', k: ['11'] }, { l: 'XS وأقدم', k: OLD }
+  ];
+  var VAR_CHIPS = [
+    { l: 'عادي', k: ['base'] }, { l: 'Mini / Plus / Air', k: ['mini', 'plus', 'air', 'e'] }, { l: 'Pro', k: ['pro'] }, { l: 'Pro Max', k: ['promax'] }
+  ];
+  var STO_CHIPS = [
+    { l: '64 – 128', k: [64, 128] }, { l: '256', k: [256] }, { l: '512 فأكثر', k: [512, 1024] }
+  ];
+
+  function passes(r, ign) {
+    ign = ign || {};
+    if (!ign.gens && state.gens.size && !state.gens.has(r.g)) return false;
+    if (!ign.vars && state.vars.size && !state.vars.has(r.v)) return false;
+    if (!ign.sto && state.sto.size && !state.sto.has(r.sto)) return false;
+    if (!ign.q && state.q && r._n.indexOf(state.q) === -1) return false;
+    return true;
+  }
+  function fv(ign) { return VALID.filter(function (r) { return passes(r, ign); }); }
+  function sortedPrices(rows) { return rows.map(function (r) { return r.p; }).sort(function (a, b) { return a - b; }); }
+  function filtersActive() { return state.gens.size || state.vars.size || state.sto.size || state.q; }
+
+  /* ---------- tooltip ---------- */
+  var tip = $('#tip');
+  function showTip(x, y, title, lines) {
+    tip.replaceChildren();
+    T('div', 'tt-title', title, tip);
+    lines.forEach(function (ln) {
+      var d = T('div', 'tt-row', null, tip);
+      T('b', 'tt-val', ln[0], d);
+      T('span', 'tt-lab', ln[1], d);
+    });
+    tip.hidden = false;
+    var w = tip.offsetWidth, h = tip.offsetHeight;
+    var left = x + 14, top = y + 14;
+    if (left + w > window.innerWidth - 8) left = x - w - 14;
+    if (left < 8) left = 8;
+    if (top + h > window.innerHeight - 8) top = y - h - 14;
+    if (top < 8) top = 8;
+    tip.style.left = left + 'px';
+    tip.style.top = top + 'px';
+  }
+  function hideTip() { tip.hidden = true; }
+  function bindTip(node, fn) {
+    node.addEventListener('pointermove', function (e) { var c = fn(); showTip(e.clientX, e.clientY, c.title, c.lines); });
+    node.addEventListener('pointerleave', hideTip);
+    node.addEventListener('focus', function () {
+      var b = node.getBoundingClientRect(), c = fn();
+      showTip(b.left + b.width / 2, b.top + b.height / 2, c.title, c.lines);
+    });
+    node.addEventListener('blur', hideTip);
+  }
+
+  /* ---------- filters ---------- */
+  function chipActive(set, keys) { return keys.every(function (k) { return set.has(k); }); }
+  function chipCount(keys, field) {
+    return VALID.filter(function (r) { return keys.indexOf(r[field]) !== -1; }).length;
+  }
+  function buildChips(host, defs, set, field) {
+    host.replaceChildren();
+    defs.forEach(function (d) {
+      var b = T('button', 'chip', null, host);
+      b.type = 'button';
+      b.setAttribute('aria-pressed', chipActive(set, d.k) ? 'true' : 'false');
+      T('span', null, d.l, b);
+      T('small', null, String(chipCount(d.k, field)), b);
+      b.addEventListener('click', function () {
+        if (chipActive(set, d.k)) d.k.forEach(function (k) { set.delete(k); });
+        else d.k.forEach(function (k) { set.add(k); });
+        state.page = 0;
+        render();
+      });
+    });
+  }
+  function renderFilters() {
+    buildChips($('#f-gen'), GEN_CHIPS, state.gens, 'g');
+    buildChips($('#f-var'), VAR_CHIPS, state.vars, 'v');
+    buildChips($('#f-sto'), STO_CHIPS, state.sto, 'sto');
+    var n = fv().length;
+    $('#count').textContent = n + ' إعلان صالح بعد الفلاتر';
+    $('#reset').disabled = !filtersActive();
+  }
+
+  /* ---------- KPIs ---------- */
+  function renderKPIs() {
+    var host = $('#kpis');
+    host.replaceChildren();
+    var rows = fv();
+    var n = rows.length;
+    var pr = sortedPrices(rows);
+    var med = quant(pr, 0.5);
+    var mean = n ? pr.reduce(function (a, b) { return a + b; }, 0) / n : null;
+
+    function tile(cls, lab) {
+      var t = T('div', 'tile ' + cls, null, host);
+      T('div', 'lab', lab, t);
+      return t;
+    }
+    var h = tile('hero', 'وسيط السعر');
+    var v = T('div', 'val', n ? fmt(med) : '—', h);
+    if (n) T('small', null, 'جنيه', v);
+    var sub = T('div', 'sub', null, h);
+    if (!n) sub.textContent = 'مفيش إعلانات بالفلاتر دي';
+    else if (filtersActive()) {
+      var d = med / MARKET_MED - 1;
+      var span = T('span', 'delta ' + (d > 0.005 ? 'up' : d < -0.005 ? 'down' : ''), pct(d), sub);
+      sub.appendChild(document.createTextNode(' مقارنة بوسيط السوق كله (' + fmt(MARKET_MED) + ' جنيه)'));
+    } else sub.textContent = 'وسيط كل الإعلانات الصالحة';
+
+    var t2 = tile('', 'متوسط السعر');
+    var v2 = T('div', 'val', n ? fmt(mean) : '—', t2);
+    if (n) T('small', null, 'جنيه', v2);
+    T('div', 'sub', n ? (Math.abs(mean / med - 1) < 0.02 ? 'قريب من الوسيط' : 'الوسيط أقل منه بـ ‎' + Math.abs(Math.round((1 - med / mean) * 100)) + '%‎') : '', t2);
+    if (n && mean < med) t2.lastChild.textContent = 'الوسيط أعلى منه بـ ‎' + Math.round((med / mean - 1) * 100) + '%‎';
+
+    var t3 = tile('', 'عدد الإعلانات');
+    T('div', 'val', String(n), t3);
+    T('div', 'sub', 'من ' + VALID.length + ' إعلان صالح', t3);
+
+    var t4 = tile('', 'النطاق الشائع');
+    var v4 = T('div', 'val mid', n ? fmtK(quant(pr, 0.25)) + ' – ' + fmtK(quant(pr, 0.75)) : '—', t4);
+    T('div', 'sub', 'نص الإعلانات تقريبًا في النطاق ده', t4);
+
+    var t5 = tile('', 'أرخص وأغلى إعلان');
+    var minR = null, maxR = null;
+    rows.forEach(function (r) {
+      if (!minR || r.p < minR.p) minR = r;
+      if (!maxR || r.p > maxR.p) maxR = r;
+    });
+    T('div', 'val mid', n ? fmtK(minR.p) + ' – ' + fmtK(maxR.p) : '—', t5);
+    T('div', 'sub', n ? 'الأرخص: ' + modelName(minR) + ' · الأغلى: ' + modelName(maxR) : '', t5);
+  }
+
+  /* ---------- chart helpers ---------- */
+  function niceStep(max, target) {
+    var steps = [1000, 2000, 2500, 5000, 10000, 20000, 25000, 50000];
+    for (var i = 0; i < steps.length; i++) if (max / steps[i] <= target) return steps[i];
+    return 50000;
+  }
+  function emptyMsg(host, msg) {
+    host.replaceChildren();
+    T('div', 'empty', msg || 'مفيش إعلانات بالفلاتر دي. جرّب تشيل فلتر أو أكتر.', host);
+  }
+  function buildTable(host, headers, rows) {
+    host.replaceChildren();
+    var t = T('table', null, null, host);
+    var tr = T('tr', null, null, T('thead', null, null, t));
+    headers.forEach(function (h) { T('th', null, h, tr); });
+    var tb = T('tbody', null, null, t);
+    rows.forEach(function (r) {
+      var x = T('tr', null, null, tb);
+      r.forEach(function (c) { T('td', null, c, x); });
+    });
+  }
+
+  /* ---------- range by generation ---------- */
+  function genStats() {
+    var rows = fv({ gens: 1 });
+    var out = [];
+    GENS.forEach(function (g) {
+      var a = sortedPrices(rows.filter(function (r) { return r.g === g; }));
+      if (!a.length) return;
+      out.push({ g: g, n: a.length, min: a[0], max: a[a.length - 1], q1: quant(a, 0.25), med: quant(a, 0.5), q3: quant(a, 0.75) });
+    });
+    return out;
+  }
+  function renderRange() {
+    var host = $('#c-range');
+    var data = genStats();
+    var rows = data.map(function (d) { return [GEN_LABEL[d.g], d.n, fmt(d.min), fmt(d.q1), fmt(d.med), fmt(d.q3), fmt(d.max)]; });
+    buildTable($('#t-range'), ['الجيل', 'العدد', 'الأرخص', '25%', 'الوسيط', '75%', 'الأغلى'], rows);
+    if (!data.length) return emptyMsg(host);
+    host.replaceChildren();
+    var W = host.clientWidth || 560;
+    var rowH = 32, top = 26, bot = 4, labelW = 104;
+    var H = top + data.length * rowH + bot;
+    var plotR = W - labelW - 6, plotL = 58;
+    var maxV = Math.max.apply(null, data.map(function (d) { return d.max; }));
+    var step = niceStep(maxV, 5);
+    var top2 = Math.ceil(maxV / step) * step;
+    function x(v) { return plotR - (v / top2) * (plotR - plotL); }
+    var svg = S('svg', { width: W, height: H, viewBox: '0 0 ' + W + ' ' + H, role: 'img', 'aria-label': 'نطاق الأسعار لكل جيل' }, host);
+    for (var v = 0; v <= top2; v += step) {
+      S('line', { x1: x(v), x2: x(v), y1: 18, y2: H - bot, stroke: 'var(--grid)', 'stroke-width': 1 }, svg);
+      var tx = S('text', { x: x(v), y: 11, 'text-anchor': 'middle', class: 't-axis' }, svg);
+      tx.textContent = v === 0 ? '0' : fmtK(v);
+    }
+    var anyFilter = state.gens.size > 0;
+    data.forEach(function (d, i) {
+      var cy = top + i * rowH + rowH / 2;
+      var g = S('g', { tabindex: 0, role: 'button', 'aria-pressed': state.gens.has(d.g) ? 'true' : 'false', 'aria-label': GEN_LABEL[d.g] + '، الوسيط ' + fmt(d.med) }, svg);
+      if (anyFilter && !state.gens.has(d.g)) g.setAttribute('class', 'dim');
+      S('rect', { x: 0, y: cy - rowH / 2, width: W, height: rowH, class: 'rowhit' }, g);
+      S('line', { x1: x(d.max), x2: x(d.min), y1: cy, y2: cy, stroke: 'var(--axis)', 'stroke-width': 2, 'stroke-linecap': 'round', 'pointer-events': 'none' }, g);
+      if (d.n >= 3) {
+        S('rect', { x: x(d.q3), y: cy - 5, width: Math.max(4, x(d.q1) - x(d.q3)), height: 10, rx: 5, fill: 'var(--s1)', 'pointer-events': 'none' }, g);
+        S('circle', { cx: x(d.med), cy: cy, r: 4.5, fill: 'var(--ink)', stroke: 'var(--surface)', 'stroke-width': 2, 'pointer-events': 'none' }, g);
+      } else {
+        S('circle', { cx: x(d.med), cy: cy, r: 4.5, fill: 'var(--surface)', stroke: 'var(--ink2)', 'stroke-width': 2, 'pointer-events': 'none' }, g);
+      }
+      var lb = S('text', { x: W - 4, y: cy + 4.5, 'text-anchor': 'end', class: 't-lab', 'pointer-events': 'none' }, g);
+      lb.textContent = GEN_LABEL[d.g];
+      var nn = S('text', { x: W - labelW, y: cy + 4, 'text-anchor': 'start', class: 't-n', 'pointer-events': 'none' }, g);
+      nn.textContent = d.n;
+      var vl = S('text', { x: x(d.max) - 9, y: cy + 4, 'text-anchor': 'end', class: 't-val', 'pointer-events': 'none' }, g);
+      vl.textContent = fmt(d.med);
+      g.addEventListener('click', function () { toggleGen(d.g); });
+      g.addEventListener('keydown', function (e) { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); toggleGen(d.g); } });
+      bindTip(g, function () {
+        return {
+          title: GEN_LABEL[d.g] + ' (' + d.n + ' إعلان)',
+          lines: [[fmt(d.med) + ' جنيه', 'الوسيط'], [fmt(d.q1) + ' – ' + fmt(d.q3), 'النطاق الشائع'], [fmt(d.min) + ' – ' + fmt(d.max), 'أرخص وأغلى إعلان']]
+        };
+      });
+    });
+  }
+  function toggleGen(g) {
+    if (state.gens.has(g)) state.gens.delete(g); else state.gens.add(g);
+    state.page = 0;
+    render();
+  }
+
+  /* ---------- histogram ---------- */
+  function renderHist() {
+    var host = $('#c-hist');
+    var rows = fv();
+    if (!rows.length) { buildTable($('#t-hist'), ['الشريحة', 'العدد'], []); return emptyMsg(host); }
+    var pr = sortedPrices(rows);
+    var min = pr[0], max = pr[pr.length - 1];
+    var bw = 1000, steps = [1000, 2000, 2500, 5000, 10000];
+    for (var si = 0; si < steps.length; si++) { bw = steps[si]; if (Math.ceil((max - Math.floor(min / bw) * bw + 1) / bw) <= 16) break; }
+    var start = Math.floor(min / bw) * bw;
+    var nb = Math.floor((max - start) / bw) + 1;
+    var counts = new Array(nb).fill(0);
+    pr.forEach(function (p) { counts[Math.floor((p - start) / bw)]++; });
+    var tbl = counts.map(function (c, i) { return [fmt(start + i * bw) + ' – ' + fmt(start + (i + 1) * bw), c]; });
+    buildTable($('#t-hist'), ['الشريحة (جنيه)', 'العدد'], tbl);
+
+    host.replaceChildren();
+    var W = host.clientWidth || 560, H = 330;
+    var mT = 34, mB = 26, mR = 34, mL = 10;
+    var plotR = W - mR, plotL = mL, plotW = plotR - plotL, plotH = H - mT - mB;
+    var yMax = Math.max.apply(null, counts);
+    var yStep = yMax <= 6 ? 1 : yMax <= 12 ? 2 : yMax <= 30 ? 5 : 10;
+    var yTop = Math.ceil(yMax / yStep) * yStep;
+    function y(c) { return mT + plotH - (c / yTop) * plotH; }
+    var sw = plotW / nb;
+    var svg = S('svg', { width: W, height: H, viewBox: '0 0 ' + W + ' ' + H, role: 'img', 'aria-label': 'توزيع الأسعار' }, host);
+    for (var c = 0; c <= yTop; c += yStep) {
+      S('line', { x1: plotL, x2: plotR, y1: y(c), y2: y(c), stroke: c === 0 ? 'var(--axis)' : 'var(--grid)', 'stroke-width': 1 }, svg);
+      var yt = S('text', { x: W - 2, y: y(c) + 4, 'text-anchor': 'end', class: 't-axis' }, svg);
+      yt.textContent = c;
+    }
+    var every = Math.ceil(nb / 6);
+    for (var j = 0; j <= nb; j += every) {
+      var xl = S('text', { x: plotR - j * sw, y: H - 6, 'text-anchor': 'middle', class: 't-axis' }, svg);
+      xl.textContent = fmtK(start + j * bw);
+    }
+    counts.forEach(function (cnt, i) {
+      var cx = plotR - (i + 0.5) * sw;
+      var bwid = Math.min(24, sw - 3);
+      if (cnt > 0) {
+        var h = y(0) - y(cnt), r = Math.min(4, h, bwid / 2);
+        var x0 = cx - bwid / 2, x1 = cx + bwid / 2, y0 = y(cnt), yb = y(0);
+        var d = 'M' + x0 + ' ' + yb + 'V' + (y0 + r) + 'Q' + x0 + ' ' + y0 + ' ' + (x0 + r) + ' ' + y0 + 'H' + (x1 - r) + 'Q' + x1 + ' ' + y0 + ' ' + x1 + ' ' + (y0 + r) + 'V' + yb + 'Z';
+        S('path', { d: d, fill: 'var(--s1)' }, svg);
+      }
+      var hit = S('rect', { x: cx - sw / 2, y: mT, width: sw, height: plotH, fill: 'transparent', tabindex: 0, 'aria-label': fmt(start + i * bw) + ' إلى ' + fmt(start + (i + 1) * bw) + ': ' + cnt + ' إعلان' }, svg);
+      hit.addEventListener('pointerenter', function () { hit.setAttribute('fill', 'var(--wash)'); });
+      hit.addEventListener('pointerleave', function () { hit.setAttribute('fill', 'transparent'); });
+      bindTip(hit, function () {
+        return { title: fmt(start + i * bw) + ' – ' + fmt(start + (i + 1) * bw) + ' جنيه', lines: [[cnt + ' إعلان', Math.round(cnt / rows.length * 100) + '% من الإعلانات']] };
+      });
+    });
+    var med = quant(pr, 0.5);
+    var mx = plotR - ((med - start) / bw) * sw;
+    S('line', { x1: mx, x2: mx, y1: mT - 8, y2: y(0), stroke: 'var(--ink)', 'stroke-width': 1.5, 'pointer-events': 'none' }, svg);
+    var anchor = mx < 70 ? 'start' : mx > W - 70 ? 'end' : 'middle';
+    var mt = S('text', { x: mx, y: 12, 'text-anchor': anchor, class: 't-lab', 'pointer-events': 'none' }, svg);
+    mt.textContent = 'الوسيط ' + fmt(med);
+  }
+
+  /* ---------- heatmap ---------- */
+  var HCOLS = [
+    { l: 'عادي', v: ['base'] }, { l: 'Mini / Plus / Air', v: ['mini', 'plus', 'air', 'e'] }, { l: 'Pro', v: ['pro'] }, { l: 'Pro Max', v: ['promax'] }
+  ];
+  function renderHeat() {
+    var host = $('#c-heat');
+    host.replaceChildren();
+    var rows = fv({ gens: 1, vars: 1 });
+    var cells = {}, all = [];
+    GENS.forEach(function (g) {
+      HCOLS.forEach(function (c, ci) {
+        var a = sortedPrices(rows.filter(function (r) { return r.g === g && c.v.indexOf(r.v) !== -1; }));
+        if (a.length) { cells[g + ':' + ci] = { med: quant(a, 0.5), n: a.length, min: a[0], max: a[a.length - 1] }; all.push(quant(a, 0.5)); }
+      });
+    });
+    if (!all.length) return emptyMsg(host);
+    var lo = Math.min.apply(null, all), hi = Math.max.apply(null, all);
+    var grid = T('div', 'heat', null, host);
+    T('div', 'hh', '', grid);
+    HCOLS.forEach(function (c) { T('div', 'hh', c.l, grid); });
+    GENS.forEach(function (g) {
+      var has = HCOLS.some(function (c, ci) { return cells[g + ':' + ci]; });
+      var anyAll = VALID.some(function (r) { return r.g === g; });
+      if (!has && !anyAll) return;
+      T('div', 'hr', GEN_LABEL[g].replace('آيفون ', ''), grid);
+      HCOLS.forEach(function (c, ci) {
+        var d = cells[g + ':' + ci];
+        if (!d) { T('div', 'cell none', '–', grid); return; }
+        var f = hi === lo ? 0.5 : Math.sqrt((d.med - lo) / (hi - lo));
+        var b = T('button', 'cell' + (d.n < 3 ? ' thin' : ''), fmtK(d.med), grid);
+        b.type = 'button';
+        b.style.background = 'color-mix(in oklab, var(--seq-hi) ' + Math.round(f * 100) + '%, var(--seq-lo))';
+        b.style.color = f > 0.45 ? 'var(--seq-ink-hi)' : 'var(--seq-ink-lo)';
+        var on = state.gens.has(g) && c.v.every(function (v) { return state.vars.has(v); });
+        if (on) b.classList.add('on');
+        b.setAttribute('aria-pressed', on ? 'true' : 'false');
+        b.setAttribute('aria-label', GEN_LABEL[g] + ' ' + c.l + '، الوسيط ' + fmt(d.med));
+        b.addEventListener('click', function () {
+          if (on) { state.gens.delete(g); c.v.forEach(function (v) { state.vars.delete(v); }); }
+          else { state.gens = new Set([g]); state.vars = new Set(c.v); }
+          state.page = 0;
+          render();
+        });
+        bindTip(b, function () {
+          return { title: GEN_LABEL[g] + ' ' + c.l + ' (' + d.n + ' إعلان)', lines: [[fmt(d.med) + ' جنيه', 'الوسيط'], [fmt(d.min) + ' – ' + fmt(d.max), 'أرخص وأغلى إعلان']] };
+        });
+      });
+    });
+    var rp = T('div', 'ramp', null, host);
+    T('span', null, fmtK(lo), rp);
+    T('i', null, null, rp);
+    T('span', null, fmtK(hi), rp);
+  }
+
+  /* ---------- price drivers ---------- */
+  var FEATS = [
+    { g: 'الضريبة', l: 'ضريبة مدفوعة أو معفي', f: function (r) { return r.tax === 'exempt'; } },
+    { g: 'الضريبة', l: 'عليه ضريبة (المشتري بيدفعها)', f: function (r) { return r.tax === 'due'; } },
+    { g: 'البطارية', l: 'بطارية 90% فأكثر', f: function (r) { return r.bat != null && r.bat >= 90; } },
+    { g: 'البطارية', l: 'بطارية من 80% إلى 89%', f: function (r) { return r.bat != null && r.bat >= 80 && r.bat < 90; } },
+    { g: 'البطارية', l: 'بطارية أقل من 80%', f: function (r) { return r.bat != null && r.bat < 80; } },
+    { g: 'السعة', l: 'سعة 64 أو 128 جيجا', f: function (r) { return r.sto != null && r.sto <= 128; } },
+    { g: 'السعة', l: 'سعة 256 جيجا', f: function (r) { return r.sto === 256; } },
+    { g: 'السعة', l: 'سعة 512 جيجا فأكثر', f: function (r) { return r.sto != null && r.sto >= 512; } },
+    { g: 'الحالة والملحقات', l: 'معاه العلبة', f: function (r) { return !!r.box; } },
+    { g: 'الحالة والملحقات', l: 'مكتوب إنه زيرو أو جديد', f: function (r) { return !!r.nw; } },
+    { g: 'الحالة والملحقات', l: 'وارد الخارج', f: function (r) { return !!r.imp; } }
+  ];
+  function renderDrivers() {
+    var host = $('#c-drv');
+    host.replaceChildren();
+    var rows = fv();
+    var res = FEATS.map(function (ft) {
+      var rel = rows.filter(function (r) { return ft.f(r) && r.rel != null; }).map(function (r) { return r.rel; }).sort(function (a, b) { return a - b; });
+      return { ft: ft, n: rel.length, med: rel.length ? quant(rel, 0.5) : null };
+    });
+    buildTable($('#t-drv'), ['الخاصية', 'عدد الإعلانات', 'وسيط الفرق'], res.map(function (r) { return [r.ft.l, r.n, r.n >= 3 ? pct(r.med) : 'عينة صغيرة']; }));
+    var shown = res.filter(function (r) { return r.n >= 3; });
+    if (!rows.length) return emptyMsg(host);
+    var maxAbs = Math.max(0.1, Math.max.apply(null, shown.map(function (r) { return Math.abs(r.med); }).concat([0])));
+    var lastG = null;
+    res.forEach(function (r) {
+      if (r.ft.g !== lastG) { T('div', 'dgroup', r.ft.g, host); lastG = r.ft.g; }
+      var row = T('div', 'drow', null, host);
+      row.tabIndex = 0;
+      var lab = T('div', 'dlab', r.ft.l, row);
+      T('small', null, String(r.n), lab);
+      var tr = T('div', 'track', null, row);
+      if (r.n >= 3) {
+        var w = Math.abs(r.med) / maxAbs * 34;
+        var b = T('div', 'bar ' + (r.med >= 0 ? 'pos' : 'neg'), null, tr);
+        b.style.width = w + '%';
+        var v = T('div', 'bv', pct(r.med), tr);
+        if (r.med >= 0) v.style.right = 'calc(50% + ' + w + '% + 6px)';
+        else v.style.left = 'calc(50% + ' + w + '% + 6px)';
+      } else {
+        T('div', 'bv few', r.n ? 'عينة صغيرة' : 'مفيش بيانات', tr);
+      }
+      bindTip(row, function () {
+        return {
+          title: r.ft.l,
+          lines: r.n >= 3 ? [[pct(r.med), 'وسيط الفرق عن نفس الجيل والفئة'], [r.n + ' إعلان', 'عدد الإعلانات']] : [[String(r.n), 'عدد الإعلانات (قليل جدًا للمقارنة)']]
+        };
+      });
+    });
+    var cap = T('div', 'axis-cap', null, host);
+    T('span', null, '→ أرخص', cap);
+    T('span', null, 'أغلى من الموديل ←', cap);
+  }
+
+  /* ---------- data quality ---------- */
+  function renderQuality() {
+    var host = $('#c-qual');
+    var tot = DATA.length;
+    var cnt = {};
+    DATA.forEach(function (r) { cnt[r.s] = (cnt[r.s] || 0) + 1; });
+    var valid = cnt.valid || 0, clone = cnt.clone || 0, other = tot - valid - clone;
+    $('#q-title').textContent = 'من أصل ' + tot + ' إعلان، كام واحد نعتمد عليه؟';
+    $('#m-total').textContent = tot + ' إعلان تم جمعها';
+    var cl = DATA.filter(function (r) { return r.s === 'clone' && r.p; }).map(function (r) { return r.p; }).sort(function (a, b) { return a - b; });
+    var real17 = VALID.filter(function (r) { return r.g === '17' && r.v === 'promax'; }).map(function (r) { return r.p; }).sort(function (a, b) { return a - b; });
+    $('#q-sub').textContent = 'إعلانات الكوبي والدعاية وسيط سعرها ' + fmt(quant(cl, 0.5)) + ' جنيه، بينما وسيط آيفون 17 Pro Max الأصلي ' + fmt(quant(real17, 0.5)) + ' جنيه.';
+    host.replaceChildren();
+    var W = host.clientWidth || 600, H = 40;
+    var svg = S('svg', { width: W, height: H, viewBox: '0 0 ' + W + ' ' + H, role: 'img', 'aria-label': 'تركيبة الإعلانات: ' + valid + ' صالح، ' + clone + ' كوبي أو دعائي، ' + other + ' مستبعد لأسباب أخرى' }, host);
+    var segs = [
+      { n: valid, c: 'var(--s1)', ink: 'var(--s-ink)', l: 'صالح للتحليل' },
+      { n: clone, c: 'var(--s2)', ink: 'var(--s-ink)', l: 'كوبي أو دعائي' },
+      { n: other, c: 'var(--s3)', ink: 'var(--s3-ink)', l: 'مستبعد لأسباب أخرى' }
+    ];
+    var gap = 2, avail = W - gap * (segs.length - 1), xr = W;
+    segs.forEach(function (s) {
+      var w = s.n / tot * avail;
+      var r = S('rect', { x: xr - w, y: 0, width: w, height: H, rx: 4, fill: s.c, tabindex: 0, 'aria-label': s.l + ': ' + s.n }, svg);
+      if (w > 46) {
+        var tx = S('text', { x: xr - w / 2, y: H / 2 + 5, 'text-anchor': 'middle', 'font-size': 14, 'font-weight': 600, fill: s.ink, 'font-family': 'var(--font)', 'pointer-events': 'none' }, svg);
+        tx.textContent = s.n;
+      }
+      bindTip(r, function () { return { title: s.l, lines: [[s.n + ' إعلان', Math.round(s.n / tot * 100) + '% من الإجمالي']] }; });
+      xr -= w + gap;
+    });
+    var lg = $('#q-legend');
+    lg.replaceChildren();
+    segs.forEach(function (s) {
+      var sp = T('span', null, null, lg);
+      var i = T('i', null, null, sp);
+      i.style.background = s.c;
+      sp.appendChild(document.createTextNode(s.l));
+      T('b', null, String(s.n), sp);
+    });
+    var rs = $('#q-reasons');
+    rs.replaceChildren();
+    var price = (cnt.badprice || 0) + (cnt.outlier || 0);
+    [
+      [clone, 'كوبي أو دعائي', 'عنوان فيه كلمة كوبي أو صيغة إعلان دعائي، أو آيفون 17 و18 بأقل من 20,000 جنيه'],
+      [(cnt.other || 0), 'إكسسوار أو منتج مش آيفون', 'جرابات وشاشات وسماعات وأجهزة تانية معروضة للبدل'],
+      [(cnt.unknown || 0), 'الموديل مش واضح', 'العنوان مفيهوش رقم الجيل فمقدرناش نقارنه'],
+      [price, 'سعر غير منطقي', 'أقل من الحد المعقول للموديل أو بعيد جدًا عن وسيط نفس الجيل والفئة'],
+      [(cnt.dup || 0), 'إعلان مكرر', 'نفس العنوان ونفس السعر اتكرر']
+    ].forEach(function (x) {
+      var li = T('li', null, null, rs);
+      T('b', null, String(x[0]), li);
+      T('span', null, x[1], li);
+      T('em', null, x[2], li);
+    });
+  }
+
+  /* ---------- table ---------- */
+  var COLS = [
+    { k: 't', l: 'الإعلان' }, { k: 'm', l: 'الموديل' }, { k: 'sto', l: 'السعة' }, { k: 'bat', l: 'البطارية' },
+    { k: 'p', l: 'السعر (جنيه)' }, { k: 'rel', l: 'عن وسيط الموديل' }, { k: 's', l: 'الحالة' }
+  ];
+  function keyOf(r, k) {
+    switch (k) {
+      case 't': return r._n;
+      case 'm': return r.g ? GORD[r.g] * 10 + (VORD[r.v] || 0) : null;
+      case 's': return STORD[r.s];
+      default: return r[k] == null ? null : r[k];
+    }
+  }
+  function renderHead() {
+    var tr = $('#thead');
+    tr.replaceChildren();
+    COLS.forEach(function (c) {
+      var th = T('th', null, null, tr);
+      th.setAttribute('aria-sort', state.sort.k === c.k ? (state.sort.d > 0 ? 'ascending' : 'descending') : 'none');
+      var b = T('button', null, c.l, th);
+      b.type = 'button';
+      b.addEventListener('click', function () {
+        if (state.sort.k === c.k) state.sort.d *= -1; else state.sort = { k: c.k, d: (c.k === 't' || c.k === 'rel') ? 1 : -1 };
+        state.page = 0;
+        renderTable();
+        renderHead();
+      });
+    });
+  }
+  function renderTable() {
+    var base = state.showAll ? DATA : VALID;
+    var rows = base.filter(function (r) { return passes(r); });
+    var k = state.sort.k, d = state.sort.d;
+    rows = rows.slice().sort(function (a, b) {
+      var x = keyOf(a, k), y = keyOf(b, k);
+      if (x == null && y == null) return 0;
+      if (x == null) return 1;
+      if (y == null) return -1;
+      return x < y ? -d : x > y ? d : 0;
+    });
+    var pages = Math.max(1, Math.ceil(rows.length / PAGE));
+    if (state.page >= pages) state.page = pages - 1;
+    var slice = rows.slice(state.page * PAGE, state.page * PAGE + PAGE);
+    var tb = $('#tbody');
+    tb.replaceChildren();
+    if (!slice.length) {
+      var tr0 = T('tr', null, null, tb);
+      var td0 = T('td', 'empty', 'مفيش إعلانات بالفلاتر دي.', tr0);
+      td0.colSpan = COLS.length;
+    }
+    slice.forEach(function (r) {
+      var tr = T('tr', null, null, tb);
+      var c1 = T('td', null, null, tr);
+      var ttl = T('div', 'ttl', r.t, c1);
+      ttl.title = r.t;
+      T('td', null, modelName(r), tr);
+      T('td', 'num', r.sto ? (r.sto === 1024 ? '1 تيرا' : r.sto + ' جيجا') : '–', tr);
+      T('td', 'num', r.bat ? r.bat + '%' : '–', tr);
+      T('td', 'num price', r.p == null ? '–' : fmt(r.p), tr);
+      var c6 = T('td', 'num', null, tr);
+      if (r.rel == null) c6.textContent = '–';
+      else T('span', 'pill ' + (r.rel > 0.02 ? 'up' : r.rel < -0.02 ? 'down' : 'flat'), pct(r.rel), c6);
+      var c7 = T('td', null, null, tr);
+      var st = STAT[r.s];
+      var sp = T('span', 'st', null, c7);
+      var dot = T('i', null, null, sp);
+      dot.style.background = 'var(--' + st[1] + ')';
+      sp.appendChild(document.createTextNode(st[0]));
+      if (r.why && r.s !== 'clone') T('span', 'why', r.why, c7);
+    });
+    $('#pinfo').textContent = rows.length ? 'عرض ' + (state.page * PAGE + 1) + ' – ' + Math.min(rows.length, (state.page + 1) * PAGE) + ' من ' + rows.length : 'لا نتائج';
+    $('#pprev').disabled = state.page === 0;
+    $('#pnext').disabled = state.page >= pages - 1;
+  }
+
+  /* ---------- wiring ---------- */
+  function render() {
+    renderFilters();
+    renderKPIs();
+    renderRange();
+    renderHist();
+    renderHeat();
+    renderDrivers();
+    renderTable();
+  }
+  var qt;
+  $('#q').addEventListener('input', function (e) {
+    clearTimeout(qt);
+    var v = e.target.value;
+    qt = setTimeout(function () { state.q = nz(v.trim()); state.page = 0; render(); }, 120);
+  });
+  $('#reset').addEventListener('click', function () {
+    state.gens = new Set(); state.vars = new Set(); state.sto = new Set(); state.q = ''; state.page = 0;
+    $('#q').value = '';
+    render();
+  });
+  $('#showall').addEventListener('change', function (e) { state.showAll = e.target.checked; state.page = 0; renderTable(); });
+  $('#pprev').addEventListener('click', function () { state.page = Math.max(0, state.page - 1); renderTable(); });
+  $('#pnext').addEventListener('click', function () { state.page++; renderTable(); });
+  function preset(k, d) { state.sort = { k: k, d: d }; state.page = 0; renderHead(); renderTable(); }
+  $('#p-deal').addEventListener('click', function () { preset('rel', 1); });
+  $('#p-low').addEventListener('click', function () { preset('p', 1); });
+  $('#p-high').addEventListener('click', function () { preset('p', -1); });
+  document.querySelectorAll('.vt').forEach(function (b) {
+    b.addEventListener('click', function () {
+      var id = b.getAttribute('data-for');
+      var chart = id === 'range' ? $('#c-range') : id === 'hist' ? $('#c-hist') : $('#c-drv');
+      var tbl = $('#t-' + id);
+      var showT = tbl.hidden;
+      tbl.hidden = !showT;
+      chart.hidden = showT;
+      b.textContent = showT ? 'عرض كرسم' : 'عرض كجدول';
+      hideTip();
+    });
+  });
+
+  var ro = typeof ResizeObserver === 'function';
+  function watch(id, fn) {
+    if (!ro) return;
+    var el = $(id), last = 0, raf = 0;
+    new ResizeObserver(function () {
+      var w = el.clientWidth;
+      if (!w || w === last) return;
+      last = w;
+      cancelAnimationFrame(raf);
+      raf = requestAnimationFrame(fn);
+    }).observe(el);
+  }
+  watch('#c-range', renderRange);
+  watch('#c-hist', renderHist);
+  watch('#c-qual', renderQuality);
+
+  renderHead();
+  renderQuality();
+  render();
+})();
+</script>
+
+</body></html>
